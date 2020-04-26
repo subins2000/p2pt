@@ -1,0 +1,34 @@
+{
+  "name": "p2pt",
+  "version": "1.0.0",
+  "description": "P2P connections with WebTorrent trackers",
+  "main": "p2pt.js",
+  "scripts": {
+    "test": "airtap --local test/*.js"
+  },
+  "dependencies": {
+    "bittorrent-tracker": "^9.14.5",
+    "randombytes": "^2.1.0",
+    "simple-sha1": "^3.0.1"
+  },
+  "devDependencies": {
+    "airtap": "^3.0.0",
+    "tape": "^5.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/subins2000/p2pt.git"
+  },
+  "keywords": [
+    "webtorrent",
+    "p2p",
+    "simple-peer",
+    "peer"
+  ],
+  "author": "subins2000",
+  "license": "",
+  "bugs": {
+    "url": "https://github.com/subins2000/p2pt/issues"
+  },
+  "homepage": "https://github.com/subins2000/p2pt#readme"
+}
