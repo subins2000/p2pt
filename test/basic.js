@@ -2,11 +2,11 @@ var test = require('tape')
 var P2PT = require('../p2pt')
 
 const announceURLs = [
-  'ws://localhost:5000',
-  //'wss://tracker.btorrent.xyz:443/announce'
+  'ws://localhost:5000'
+  // 'wss://tracker.btorrent.xyz:443/announce'
 ]
 
-test('character message', function (t) {  
+test('character message', function (t) {
   var p2pt1 = new P2PT(announceURLs, 'p2pt')
   var p2pt2 = new P2PT(announceURLs, 'p2pt')
 
@@ -60,7 +60,7 @@ test('chained messages', function (t) {
           t.equal(msg, 'how are you ?')
           return peer.respond('fine')
         })
-        .then(([peer,msg]) => {
+        .then(([peer, msg]) => {
           t.equal(msg, 'byeee')
           return peer.respond('bye!')
         })

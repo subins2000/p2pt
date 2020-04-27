@@ -4,7 +4,7 @@ var server = new Server({
   udp: false, // enable udp server? [default=true]
   http: false, // enable http server? [default=true]
   ws: true, // enable websocket server? [default=true]
-  stats: false, // enable web-based statistics? [default=true]
+  stats: false // enable web-based statistics? [default=true]
 })
 
 server.on('error', function (err) {
@@ -30,7 +30,7 @@ server.on('start', function (addr) {
 
 server.on('complete', function (addr) {})
 server.on('update', function (addr) {
-  console.log('update from ' + addr);
+  console.log('update from ' + addr)
 })
 server.on('stop', function (addr) {})
 
