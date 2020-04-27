@@ -188,6 +188,18 @@ class P2PT extends EventEmitter {
   }
 
   /**
+   * Destroy object
+   */
+  destroy () {
+    for (var key in this.peers) {
+      this.peers[key].destroy()
+    }
+    for (var key in this.trackers) {
+      this.trackers[key].destroy()
+    }
+  }
+
+  /**
    * A custom function binded on Peer object to easily respond back to message
    * @param Peer peer Peer to send msg to
    * @param integer msgID Message ID
