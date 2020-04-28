@@ -33,6 +33,7 @@ class P2PT extends EventEmitter {
     this.trackers = {}
     this.peers = {}
     this.msgChunks = {}
+    this.responseWaiting = {}
 
     if (identifierString) { this.setIdentifier(identifierString) }
 
@@ -59,8 +60,21 @@ class P2PT extends EventEmitter {
     const $this = this
 
     this.on('peer', (peer) => {
-      peer.on('connect', () => {
-        $this.emit('peerconnect', peer)
+      peer.once('connect', () => {
+        /**
+         * Multiple data channels to one peer is possible
+         * The `peer` object actually refers to a peer with a data channel. Even though it may have same `id` (peerID) property, the data channel will be different. Different trackers giving the same "peer" will give the `peer` object with different channels.
+         * We will store all channels as backups in case any one of them fails
+         * A peer is removed if all data channels become unavailable
+         */
+        if (!$this.peers[peer.id]) {
+          $this.peers[peer.id] = {}
+          $this.responseWaiting[peer.id] = {}
+
+          $this.emit('peerconnect', peer)
+        }
+
+        $this.peers[peer.id][peer.channelName] = peer
       })
 
       peer.on('data', (data) => {
@@ -80,7 +94,15 @@ class P2PT extends EventEmitter {
             var chunkHandler = $this._chunkHandler(data)
 
             if (chunkHandler !== false) {
-              $this.emit('msg', peer, chunkHandler)
+              /**
+               * If there's someone waiting for a response, call them
+               */
+              if ($this.responseWaiting[peer.id][data.id]) {
+                $this.responseWaiting[peer.id][data.id]([peer, chunkHandler])
+              } else {
+                $this.emit('msg', peer, chunkHandler)
+              }
+              $this._destroyChunks(data.id)
             }
           } catch (e) {
             console.log(e)
@@ -103,12 +125,19 @@ class P2PT extends EventEmitter {
   }
 
   /**
-   * Remove a peer from the list
+   * Remove a peer from the list if all channels are closed
    * @param integer id Peer ID
    */
   removePeer (peer) {
-    this.emit('peerclose', peer)
-    delete this.peers[peer.id]
+    delete this.peers[peer.id][peer.channelName]
+
+    // All data channels are gone. Peer lost
+    if (this.peers[peer.id].length === 0) {
+      this.emit('peerclose', peer)
+
+      delete this.responseWaiting[peer.id]
+      delete this.peers[peer.id]
+    }
   }
 
   /**
@@ -119,9 +148,18 @@ class P2PT extends EventEmitter {
    */
   send (peer, msg, msgID = '') {
     const $this = this
+
     return new Promise((resolve, reject) => {
+      /**
+       * Maybe peer channel is closed, so use a different channel if available
+       * Array should atleast have one channel, otherwise peer connection is closed
+       */
       if (!peer.connected) {
-        reject(Error('closed'))
+        try {
+          peer = $this.peers[peer.id][0]
+        } catch {
+          return reject(Error('Connection to peer closed'))
+        }
       }
 
       var data = {
@@ -129,30 +167,7 @@ class P2PT extends EventEmitter {
         msg: msg
       }
 
-      // TODO: Only listen callback if there's resolve i.e the caller expects a response and then only removeListener
-      var responseCallback = (responseData) => {
-        responseData = responseData.toString()
-        if (responseData[0] === JSON_MESSAGE_IDENTIFIER) {
-          try {
-            responseData = JSON.parse(responseData.slice(1))
-
-            if (responseData.id === data.id) {
-              var chunkHandler = $this._chunkHandler(responseData)
-
-              if (chunkHandler !== false) {
-                peer.removeListener('data', responseCallback)
-                $this._destroyChunks(data.id)
-
-                resolve([peer, chunkHandler])
-              }
-            }
-          } catch (e) {
-            console.log(e)
-          }
-        }
-      }
-
-      peer.on('data', responseCallback)
+      $this.responseWaiting[peer.id][data.id] = resolve
 
       var chunks = 0
       var remaining = ''
