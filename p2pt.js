@@ -60,6 +60,13 @@ class P2PT extends EventEmitter {
     const $this = this
 
     this.on('peer', (peer) => {
+      var newpeer = false
+      if (!$this.peers[peer.id]) {
+        newpeer = true
+        $this.peers[peer.id] = {}
+        $this.responseWaiting[peer.id] = {}
+      }
+
       peer.on('connect', () => {
         /**
          * Multiple data channels to one peer is possible
@@ -67,13 +74,6 @@ class P2PT extends EventEmitter {
          * We will store all channels as backups in case any one of them fails
          * A peer is removed if all data channels become unavailable
          */
-        var newpeer = false
-        if (!$this.peers[peer.id]) {
-          newpeer = true
-          $this.peers[peer.id] = {}
-          $this.responseWaiting[peer.id] = {}
-        }
-
         $this.peers[peer.id][peer.channelName] = peer
 
         if (newpeer) {
@@ -155,24 +155,24 @@ class P2PT extends EventEmitter {
     const $this = this
 
     return new Promise((resolve, reject) => {
-      /**
-       * Maybe peer channel is closed, so use a different channel if available
-       * Array should atleast have one channel, otherwise peer connection is closed
-       */
-      if (!peer.connected) {
-        try {
-          peer = $this.peers[peer.id][0]
-        } catch {
-          return reject(Error('Connection to peer closed'))
-        }
-      }
-
       var data = {
         id: msgID !== '' ? msgID : Math.floor(Math.random() * 100000 + 100000),
         msg: msg
       }
 
-      $this.responseWaiting[peer.id][data.id] = resolve
+      try {
+        /**
+         * Maybe peer channel is closed, so use a different channel if available
+         * Array should atleast have one channel, otherwise peer connection is closed
+         */
+        if (!peer.connected) {
+          peer = $this.peers[peer.id][0]
+        }
+
+        $this.responseWaiting[peer.id][data.id] = resolve
+      } catch {
+        return reject(Error('Connection to peer closed'))
+      }
 
       var chunks = 0
       var remaining = ''
