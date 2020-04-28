@@ -89,13 +89,13 @@ class P2PT extends EventEmitter {
       })
 
       peer.on('error', (err) => {
-        $this.removePeer(peer.id)
+        $this.removePeer(peer)
         debug('Error in connection : ' + err)
       })
 
       peer.on('close', () => {
-        $this.removePeer(peer.id)
-        debug('Connection closed')
+        $this.removePeer(peer)
+        debug('Connection closed with ' + peer.id)
       })
     })
 
@@ -106,9 +106,9 @@ class P2PT extends EventEmitter {
    * Remove a peer from the list
    * @param integer id Peer ID
    */
-  removePeer (id) {
-    this.emit('peerclose', id)
-    delete this.peers[id]
+  removePeer (peer) {
+    this.emit('peerclose', peer)
+    delete this.peers[peer.id]
   }
 
   /**
