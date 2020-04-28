@@ -60,21 +60,25 @@ class P2PT extends EventEmitter {
     const $this = this
 
     this.on('peer', (peer) => {
-      peer.once('connect', () => {
+      peer.on('connect', () => {
         /**
          * Multiple data channels to one peer is possible
          * The `peer` object actually refers to a peer with a data channel. Even though it may have same `id` (peerID) property, the data channel will be different. Different trackers giving the same "peer" will give the `peer` object with different channels.
          * We will store all channels as backups in case any one of them fails
          * A peer is removed if all data channels become unavailable
          */
+        var newpeer = false
         if (!$this.peers[peer.id]) {
+          newpeer = true
           $this.peers[peer.id] = {}
           $this.responseWaiting[peer.id] = {}
-
-          $this.emit('peerconnect', peer)
         }
 
         $this.peers[peer.id][peer.channelName] = peer
+
+        if (newpeer) {
+          $this.emit('peerconnect', peer)
+        }
       })
 
       peer.on('data', (data) => {
@@ -82,7 +86,7 @@ class P2PT extends EventEmitter {
 
         data = data.toString()
 
-        debug('got a message : ' + data)
+        debug('got a message from ' + peer.id)
 
         if (data[0] === JSON_MESSAGE_IDENTIFIER) {
           try {
@@ -99,6 +103,7 @@ class P2PT extends EventEmitter {
                */
               if ($this.responseWaiting[peer.id][data.id]) {
                 $this.responseWaiting[peer.id][data.id]([peer, chunkHandler])
+                delete $this.responseWaiting[peer.id][data.id]
               } else {
                 $this.emit('msg', peer, chunkHandler)
               }
@@ -184,6 +189,8 @@ class P2PT extends EventEmitter {
         data.msg = remaining
         chunks++
       }
+
+      debug('sent a message to ' + peer.id)
     })
   }
 
@@ -208,7 +215,9 @@ class P2PT extends EventEmitter {
   destroy () {
     var key
     for (key in this.peers) {
-      this.peers[key].destroy()
+      for (var key2 in this.peers[key]) {
+        this.peers[key][key2].destroy()
+      }
     }
     for (key in this.trackers) {
       this.trackers[key].destroy()
