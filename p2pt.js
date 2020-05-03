@@ -171,7 +171,7 @@ class P2PT extends EventEmitter {
         }
 
         $this.responseWaiting[peer.id][data.id] = resolve
-      } catch {
+      } catch (e) {
         return reject(Error('Connection to peer closed'))
       }
 
