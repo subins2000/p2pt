@@ -70,3 +70,35 @@ test('chained messages', function (t) {
   p2pt1.start()
   p2pt2.start()
 })
+
+test('peer connections', function (t) {
+  var p2pt1 = new P2PT(announceURLs, 'p2pt')
+  var p2pt2 = new P2PT(announceURLs, 'p2pt')
+
+  p2pt1.on('peerconnect', (peer) => {
+    t.pass('Connect event emitted')
+  })
+
+  p2pt1.on('peerclose', (peer) => {
+    t.pass('Close event emitted')
+
+    p2pt1.destroy()
+    p2pt2.destroy()
+
+    t.end()
+  })
+
+  p2pt2.on('peerconnect', (peer) => {
+    t.pass('Connect event emitted')
+
+    // Forcefully close connection
+    peer.destroy()
+  })
+
+  p2pt2.on('peerclose', (peer) => {
+    t.pass('Close event emitted')
+  })
+
+  p2pt1.start()
+  p2pt2.start()
+})
