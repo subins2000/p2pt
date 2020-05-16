@@ -150,7 +150,9 @@ Connects to network and starts discovering peers
 ### `requestMorePeers()`
 Request More Peers
 * **Arguments:** None
-* **Returns:** `Promise<>`
+* **Returns:** `Promise`
+  * **resolve(peers)**
+    * **peers:** Object
 
 ### `removePeer(peerId)`
 Remove a peer from the list
@@ -165,7 +167,7 @@ Remove a peer from the list
   * **peer:** `Object`
     * **Description:** Stores information of a Peer
 * **Returns:** `Promise`
-  * resolve([peer, msg])
+  * **resolve([peer, msg])**
     * **peer:** `Object`
     * **msg:** `Object`
 
