@@ -130,10 +130,10 @@ Instantiates the class
 * **Arguments:**
   * **announceURLs:** `Array`
     * **Description:** List of announce tracker URLs
-    * **Default Value:** `[]`
+    * **Default:** `[]`
   * **identifierString:** `String`
     * **Description:** Identifier used to discover peers in the network
-    * **Default Value:** `''`
+    * **Default:** `''`
 
 ### `setIdentifier(identifierString)`
 Sets the identifier string used to discover peers in the network
@@ -166,6 +166,11 @@ Remove a peer from the list
 * **Arguments:**
   * **peer:** `Object`
     * **Description:** Stores information of a Peer
+  * **msg:** `Object`
+    * **Description:** Message to send
+  * **msgID:** `Number`
+    * **Description:** ID of message if it's a response to a previous message
+    * **Default:** `''`
 * **Returns:** `Promise`
   * **resolve([peer, msg])**
     * **peer:** `Object`
