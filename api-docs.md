@@ -51,6 +51,19 @@ Instantiates the class
     * **Description:** Identifier used to discover peers in the network
     * **Default:** `''`
 
+```javascript
+// Find public WebTorrent tracker URLs here : https://github.com/ngosang/trackerslist/blob/master/trackers_all_ws.txt
+var trackersAnnounceURLs = [
+  "wss://tracker.openwebtorrent.com",
+  "wss://tracker.sloppyta.co:443/announce",
+  "wss://tracker.novage.com.ua:443/announce",
+  "wss://tracker.btorrent.xyz:443/announce",
+]
+
+// This 'myApp' is called identifier and should be unique to your app
+var p2pt = new P2PT(trackersAnnounceURLs, 'myApp')
+```
+
 ### `setIdentifier(identifierString)`
 Sets the identifier string used to discover peers in the network
 * **Arguments:**
