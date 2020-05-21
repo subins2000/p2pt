@@ -5,6 +5,8 @@
   * [Event: `data`](#event-data)
   * [Event: `msg`](#event-msg)
   * [Event: `peerclose`](#event-peerclose)
+  * [Event: `trackerconnect`](#event-trackerconnect)
+  * [Event: `trackerwarning`](#event-trackerwarning)
   * [`new P2PT(announceURLs = [], identifierString = '')`](#new-p2ptannounceurls---identifierstring--)
   * [`setIdentifier(identifierString)`](#setidentifieridentifierstring)
   * [`start()`](#start)
@@ -40,6 +42,16 @@ Arguments passed to Event Handler: `peer` Object, `msg` Object
 This event is emitted when a peer disconnects.
 
 Arguments passed to Event Handler: `peer` Object
+
+### Event: `trackerconnect`
+This event is emitted when a successful connection to tracker is made.
+
+Arguments passed to Event Handler: `WebSocketTracker` Object, `stats` Object
+
+### Event: `trackerwarning`
+This event is emitted when some error happens with connection to tracker.
+
+Arguments passed to Event Handler: `Error` object, `stats` Object
 
 ### `new P2PT(announceURLs = [], identifierString = '')`
 Instantiates the class
@@ -83,13 +95,6 @@ Request More Peers
   * **resolve(peers)**
     * **peers:** Object
 
-### `removePeer(peerId)`
-Remove a peer from the list
-* **Arguments:**
-  * **peerId:** `Number`
-    * **Description:** Integer ID of the peer to be removed `peer.id`
-* **Returns:** `void`
-
 ### `send(peer, msg[, msgID = ''])`
 
 * **Arguments:**
@@ -98,7 +103,7 @@ Remove a peer from the list
   * **msg:** `Object`
     * **Description:** Message to send
   * **msgID:** `Number`
-    * **Description:** ID of message if it's a response to a previous message
+    * **Description:** ID of message if it's a response to a previous message. You won't need to pass this
     * **Default:** `''`
 * **Returns:** `Promise`
   * **resolve([peer, msg])**
