@@ -117,30 +117,34 @@ class P2PT extends EventEmitter {
       })
 
       peer.on('error', (err) => {
-        $this.removePeer(peer)
+        $this._removePeer(peer)
         debug('Error in connection : ' + err)
       })
 
       peer.on('close', () => {
-        $this.removePeer(peer)
+        $this._removePeer(peer)
         debug('Connection closed with ' + peer.id)
       })
     })
 
     // Tracker responded to the announce request
     this.on('update', (response) => {
-      this.emit('trackerconnect', {
-        ...this.getTrackerStats(),
-        tracker: this.trackers[this.announceURLs.indexOf(response.announce)]
-      })
+      let tracker = this.trackers[this.announceURLs.indexOf(response.announce)]
+
+      this.emit(
+        'trackerconnect',
+        tracker,
+        this.getTrackerStats()
+      )
     })
 
     // Errors in tracker connection
     this.on('warning', (error) => {
-      this.emit('trackerwarning', {
-        ...this.getTrackerStats(),
-        error: error
-      })
+      this.emit(
+        'trackerwarning',
+        error,
+        this.getTrackerStats()
+      )
     })
 
     this._fetchPeers()
@@ -150,7 +154,7 @@ class P2PT extends EventEmitter {
    * Remove a peer from the list if all channels are closed
    * @param integer id Peer ID
    */
-  removePeer (peer) {
+  _removePeer (peer) {
     if (!this.peers[peer.id]){ return false }
 
     delete this.peers[peer.id][peer.channelName]
