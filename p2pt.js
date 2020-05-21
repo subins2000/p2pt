@@ -137,7 +137,7 @@ class P2PT extends EventEmitter {
 
     // Errors in tracker connection
     this.on('warning', (error) => {
-      this.emit('trackererror', {
+      this.emit('trackerwarning', {
         ...this.getTrackerStats(),
         error: error
       })

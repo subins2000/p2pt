@@ -84,9 +84,11 @@ test('tracker connections', function (t) {
     t.equal(status.total, 1)
 
     p2pt1.destroy()
+    p2pt2.start()
   })
 
   p2pt2.on('trackerwarning', (status) => {
+    t.match(status.error.message, new RegExp('connection error to ws\://127\.0\.0\.1\:404'))
     t.equal(status.connected, 0)
     t.equal(status.total, 1)
 
@@ -96,7 +98,6 @@ test('tracker connections', function (t) {
   })
 
   p2pt1.start()
-  p2pt2.start()
 })
 
 test('peer connections', function (t) {
