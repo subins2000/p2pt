@@ -80,6 +80,8 @@ test('tracker connections', function (t) {
   var p2pt2 = new P2PT(['ws://127.0.0.1:404'], 'p2pt')
 
   p2pt1.on('trackerconnect', (status) => {
+    t.equal(status.tracker.announceUrl, announceURLs[0])
+    
     t.equal(status.connected, 1)
     t.equal(status.total, 1)
 
@@ -89,6 +91,7 @@ test('tracker connections', function (t) {
 
   p2pt2.on('trackerwarning', (status) => {
     t.match(status.error.message, new RegExp('connection error to ws\://127\.0\.0\.1\:404'))
+
     t.equal(status.connected, 0)
     t.equal(status.total, 1)
 

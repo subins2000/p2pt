@@ -131,7 +131,7 @@ class P2PT extends EventEmitter {
     this.on('update', (response) => {
       this.emit('trackerconnect', {
         ...this.getTrackerStats(),
-        announceURL: response.announce
+        tracker: this.trackers[this.announceURLs.indexOf(response.announce)]
       })
     })
 
