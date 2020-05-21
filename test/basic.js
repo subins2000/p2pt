@@ -47,6 +47,10 @@ test('chained messages', function (t) {
       })
       .then(([peer, msg]) => {
         t.equal(msg, 'bye!')
+
+        p2pt1.destroy()
+        p2pt2.destroy()
+
         t.end()
       })
   })
@@ -69,6 +73,34 @@ test('chained messages', function (t) {
 
   p2pt1.start()
   p2pt2.start()
+})
+
+test('tracker connections', function (t) {
+  var p2pt1 = new P2PT(announceURLs, 'p2pt')
+  var p2pt2 = new P2PT(['ws://127.0.0.1:404'], 'p2pt')
+
+  p2pt1.on('trackerconnect', (status) => {
+    t.equal(status.tracker.announceUrl, announceURLs[0])
+    
+    t.equal(status.connected, 1)
+    t.equal(status.total, 1)
+
+    p2pt1.destroy()
+    p2pt2.start()
+  })
+
+  p2pt2.on('trackerwarning', (status) => {
+    t.match(status.error.message, new RegExp('connection error to ws\://127\.0\.0\.1\:404'))
+
+    t.equal(status.connected, 0)
+    t.equal(status.total, 1)
+
+    p2pt2.destroy()
+
+    t.end()
+  })
+
+  p2pt1.start()
 })
 
 test('peer connections', function (t) {

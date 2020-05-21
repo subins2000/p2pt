@@ -1,5 +1,5 @@
 /**
- * Peer 2 Peer with webTorrents
+ * Peer 2 Peer WebRTC connections with WebTorrent Trackers as signalling server
  * Copyright Subin Siby <mail@subinsb.com>, 2020
  * Licensed under MIT
  */
@@ -127,6 +127,22 @@ class P2PT extends EventEmitter {
       })
     })
 
+    // Tracker responded to the announce request
+    this.on('update', (response) => {
+      this.emit('trackerconnect', {
+        ...this.getTrackerStats(),
+        tracker: this.trackers[this.announceURLs.indexOf(response.announce)]
+      })
+    })
+
+    // Errors in tracker connection
+    this.on('warning', (error) => {
+      this.emit('trackerwarning', {
+        ...this.getTrackerStats(),
+        error: error
+      })
+    })
+
     this._fetchPeers()
   }
 
@@ -210,6 +226,23 @@ class P2PT extends EventEmitter {
       }
       resolve($this.peers)
     })
+  }
+
+  /**
+   * Get basic stats about tracker connections
+   */
+  getTrackerStats () {
+    let connectedCount = 0
+    for (var key in this.trackers) {
+      if (this.trackers[key].socket && this.trackers[key].socket.connected) {
+        connectedCount++
+      }
+    }
+
+    return {
+      connected: connectedCount,
+      total: this.announceURLs.length
+    }
   }
 
   /**
