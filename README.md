@@ -4,6 +4,8 @@ Simple library to establish P2P connections, communicate messages (even large co
 
 Used in [P2Wiki](//lab.subinsb.com/p2wiki/)
 
+[API Docs](https://github.com/subins2000/p2pt/blob/master/api-docs.md)
+
 ## Features
 
 * Easy to use API
