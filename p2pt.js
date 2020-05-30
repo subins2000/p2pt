@@ -4,6 +4,8 @@
  * Licensed under MIT
  */
 
+// TODO : Rewrite in TS
+
 const WebSocketTracker = require('bittorrent-tracker/lib/client/websocket-tracker')
 const randombytes = require('randombytes')
 const EventEmitter = require('events')
