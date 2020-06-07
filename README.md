@@ -42,44 +42,6 @@ And that is how P2PT works.
 * [P2Chat](//github.com/subins2000/p2chat): P2P noregister instant chat
 * [Vett](//github.com/subins2000/vett): P2P Dots-and-Boxes game. [Play Here](//vett.space)
 
-### Code
+### Simple Example
 
-```
-const P2PT = require('p2pt')
-
-// Find public WebTorrent tracker URLs here : https://github.com/ngosang/trackerslist/blob/master/trackers_all_ws.txt
-var trackersAnnounceURLs = [
-  "wss://tracker.openwebtorrent.com",
-  "wss://tracker.sloppyta.co:443/announce",
-  "wss://tracker.novage.com.ua:443/announce",
-  "wss://tracker.btorrent.xyz:443/announce",
-]
-
-// This 'myApp' is called identifier and should be unique to your app
-var p2pt = new P2PT(trackersAnnounceURLs, 'myApp')
-
-// If a new peer, send message
-p2pt.on('peerconnect', (peer) => {
-  console.log('New Peer !')
-  peer.send('Hi').then(([peer, msg]) => {
-    console.log(msg)
-    return peer.respond('Bye')
-  }).then(([peer, msg]) => {
-    console.log(msg)
-  })
-})
-
-// If message received from peer
-p2pt.on('msg', (peer, msg) => {
-  console.log(`Got message from ${peer.id} : ${msg}`)
-  if (msg === 'Hi') {
-    peer.respond('Hello !')
-  } else if (msg === 'Bye') {
-    peer.respond('Bye !')
-  }
-})
-
-p2pt.start()
-```
-
-Open the page with the above code in two separate browser windows, and open the console. You'll see the messages.
+Open [this webpage](https://codepen.io/subins2000/pen/MWKwRYJ) in two separate browser windows. You'll see the messages. It's a codepen, you can fiddle with the code there.
