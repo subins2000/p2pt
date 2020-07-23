@@ -41,6 +41,7 @@ And that is how P2PT works.
 * [P2Wiki](//github.com/subins2000/p2wiki): Decentralized P2P proxy to access Wikipedia
 * [P2Chat](//github.com/subins2000/p2chat): P2P noregister instant chat
 * [Vett](//github.com/subins2000/vett): P2P Dots-and-Boxes game. [Play Here](//vett.space)
+* [WebDrop](//github.com/subins2000/WebDrop): Easily share file across devices (both LAN & over Internet)
 
 ### Simple Example
 
