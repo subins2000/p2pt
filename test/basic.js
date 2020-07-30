@@ -1,5 +1,10 @@
-var test = require('tape')
-var P2PT = require('../p2pt')
+const test = require('tape')
+
+if (process.env['BROWSER_TEST']) {
+  var P2PT = require('../p2pt')
+} else {
+  var P2PT = require('../node')
+}
 
 const announceURLs = [
   'ws://localhost:5000'
