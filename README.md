@@ -1,10 +1,11 @@
 # P2PT
 
-Simple library to establish P2P connections, communicate messages (even large content!) using WebTorrent WebSocket Trackers as the signalling server.
+Simple library to establish P2P connections, communicate messages using WebTorrent Trackers (WebSocket) as the signalling server. Make any kind of WebRTC app using WebTorrent trackers as general-purpose WebRTC signalling servers.
 
-Used in [P2Wiki](//lab.subinsb.com/p2wiki/)
+Works in both browser & node environment.
 
-[API Docs](https://github.com/subins2000/p2pt/blob/master/api-docs.md)
+* [Apps made wih P2PT](#examples)
+* [API Docs](https://github.com/subins2000/p2pt/blob/master/api-docs.md)
 
 ## Features
 
@@ -42,6 +43,8 @@ And that is how P2PT works.
 * [P2Chat](//github.com/subins2000/p2chat): P2P noregister instant chat
 * [Vett](//github.com/subins2000/vett): P2P Dots-and-Boxes game. [Play Here](//vett.space)
 * [WebDrop](//github.com/subins2000/WebDrop): Easily share file across devices (both LAN & over Internet)
+
+Add yours here ! Send a PR !
 
 ### Simple Example
 
