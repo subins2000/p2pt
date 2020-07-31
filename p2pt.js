@@ -41,6 +41,8 @@ class P2PT extends EventEmitter {
     this._peerIdBuffer = randombytes(20)
     this._peerId = this._peerIdBuffer.toString('hex')
     this._peerIdBinary = this._peerIdBuffer.toString('binary')
+
+    debug('my peer id: ' + this._peerId)
   }
 
   /**
@@ -58,14 +60,12 @@ class P2PT extends EventEmitter {
    * Connect to network and start discovering peers
    */
   start () {
-    const $this = this
-
-    this.on('peer', (peer) => {
+    this.on('peer', peer => {
       var newpeer = false
-      if (!$this.peers[peer.id]) {
+      if (!this.peers[peer.id]) {
         newpeer = true
-        $this.peers[peer.id] = {}
-        $this.responseWaiting[peer.id] = {}
+        this.peers[peer.id] = {}
+        this.responseWaiting[peer.id] = {}
       }
 
       peer.on('connect', () => {
@@ -75,15 +75,15 @@ class P2PT extends EventEmitter {
          * We will store all channels as backups in case any one of them fails
          * A peer is removed if all data channels become unavailable
          */
-        $this.peers[peer.id][peer.channelName] = peer
+        this.peers[peer.id][peer.channelName] = peer
 
         if (newpeer) {
-          $this.emit('peerconnect', peer)
+          this.emit('peerconnect', peer)
         }
       })
 
-      peer.on('data', (data) => {
-        $this.emit('data', peer, data)
+      peer.on('data', data => {
+        this.emit('data', peer, data)
 
         data = data.toString()
 
@@ -94,21 +94,21 @@ class P2PT extends EventEmitter {
             data = JSON.parse(data.slice(1))
 
             // A respond function
-            peer.respond = $this._peerRespond(peer, data.id)
+            peer.respond = this._peerRespond(peer, data.id)
 
-            var chunkHandler = $this._chunkHandler(data)
+            var chunkHandler = this._chunkHandler(data)
 
             if (chunkHandler !== false) {
               /**
                * If there's someone waiting for a response, call them
                */
-              if ($this.responseWaiting[peer.id][data.id]) {
-                $this.responseWaiting[peer.id][data.id]([peer, chunkHandler])
-                delete $this.responseWaiting[peer.id][data.id]
+              if (this.responseWaiting[peer.id][data.id]) {
+                this.responseWaiting[peer.id][data.id]([peer, chunkHandler])
+                delete this.responseWaiting[peer.id][data.id]
               } else {
-                $this.emit('msg', peer, chunkHandler)
+                this.emit('msg', peer, chunkHandler)
               }
-              $this._destroyChunks(data.id)
+              this._destroyChunks(data.id)
             }
           } catch (e) {
             console.log(e)
@@ -116,20 +116,20 @@ class P2PT extends EventEmitter {
         }
       })
 
-      peer.on('error', (err) => {
-        $this._removePeer(peer)
+      peer.on('error', err => {
+        this._removePeer(peer)
         debug('Error in connection : ' + err)
       })
 
       peer.on('close', () => {
-        $this._removePeer(peer)
+        this._removePeer(peer)
         debug('Connection closed with ' + peer.id)
       })
     })
 
     // Tracker responded to the announce request
-    this.on('update', (response) => {
-      let tracker = this.trackers[this.announceURLs.indexOf(response.announce)]
+    this.on('update', response => {
+      const tracker = this.trackers[this.announceURLs.indexOf(response.announce)]
 
       this.emit(
         'trackerconnect',
@@ -139,10 +139,10 @@ class P2PT extends EventEmitter {
     })
 
     // Errors in tracker connection
-    this.on('warning', (error) => {
+    this.on('warning', err => {
       this.emit(
         'trackerwarning',
-        error,
+        err,
         this.getTrackerStats()
       )
     })
@@ -155,7 +155,7 @@ class P2PT extends EventEmitter {
    * @param integer id Peer ID
    */
   _removePeer (peer) {
-    if (!this.peers[peer.id]){ return false }
+    if (!this.peers[peer.id]) { return false }
 
     delete this.peers[peer.id][peer.channelName]
 
@@ -175,8 +175,6 @@ class P2PT extends EventEmitter {
    * @param integer msgID ID of message if it's a response to a previous message
    */
   send (peer, msg, msgID = '') {
-    const $this = this
-
     return new Promise((resolve, reject) => {
       var data = {
         id: msgID !== '' ? msgID : Math.floor(Math.random() * 100000 + 100000),
@@ -189,13 +187,13 @@ class P2PT extends EventEmitter {
          * Array should atleast have one channel, otherwise peer connection is closed
          */
         if (!peer.connected) {
-          peer = $this.peers[peer.id][0]
+          peer = this.peers[peer.id][0]
         }
 
-        if (!$this.responseWaiting[peer.id]) {
-          $this.responseWaiting[peer.id] = {}
+        if (!this.responseWaiting[peer.id]) {
+          this.responseWaiting[peer.id] = {}
         }
-        $this.responseWaiting[peer.id][data.id] = resolve
+        this.responseWaiting[peer.id][data.id] = resolve
       } catch (e) {
         return reject(Error('Connection to peer closed'))
       }
@@ -224,14 +222,13 @@ class P2PT extends EventEmitter {
    * Request more peers
    */
   requestMorePeers () {
-    const $this = this
-    return new Promise((resolve) => {
-      for (var key in $this.trackers) {
-        $this.trackers[key].announce({
+    return new Promise(resolve => {
+      for (var key in this.trackers) {
+        this.trackers[key].announce({
           numwant: 50
         })
       }
-      resolve($this.peers)
+      resolve(this.peers)
     })
   }
 
@@ -273,9 +270,8 @@ class P2PT extends EventEmitter {
    * @param integer msgID Message ID
    */
   _peerRespond (peer, msgID) {
-    var $this = this
-    return (msg) => {
-      return $this.send(peer, msg, msgID)
+    return msg => {
+      return this.send(peer, msg, msgID)
     }
   }
 
