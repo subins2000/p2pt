@@ -19,10 +19,6 @@ test('character message', function (t) {
     p2pt1.send(peer, 'hello')
   })
 
-  p2pt2.on('peerconnect', (peer) => {
-    p2pt2.send(peer, 'hello')
-  })
-
   p2pt2.on('msg', (peer, msg) => {
     t.equal(msg, 'hello')
 
