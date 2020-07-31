@@ -18,6 +18,7 @@ const JSON_MESSAGE_IDENTIFIER = 'p'
 /**
  * WebRTC data channel limit beyond which data is split into chunks
  * Chose 16KB considering Chromium
+ * https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Using_data_channels#Concerns_with_large_messages
  */
 const MAX_MESSAGE_LENGTH = 16000
 
@@ -61,7 +62,7 @@ class P2PT extends EventEmitter {
    */
   start () {
     this.on('peer', peer => {
-      var newpeer = false
+      let newpeer = false
       if (!this.peers[peer.id]) {
         newpeer = true
         this.peers[peer.id] = {}
@@ -96,17 +97,22 @@ class P2PT extends EventEmitter {
             // A respond function
             peer.respond = this._peerRespond(peer, data.id)
 
-            var chunkHandler = this._chunkHandler(data)
+            let msg = this._chunkHandler(data)
 
-            if (chunkHandler !== false) {
+            // msg fully retrieved
+            if (msg !== false) {
+              if (data.o) {
+                msg = JSON.parse(msg)
+              }
+
               /**
                * If there's someone waiting for a response, call them
                */
               if (this.responseWaiting[peer.id][data.id]) {
-                this.responseWaiting[peer.id][data.id]([peer, chunkHandler])
+                this.responseWaiting[peer.id][data.id]([peer, msg])
                 delete this.responseWaiting[peer.id][data.id]
               } else {
-                this.emit('msg', peer, chunkHandler)
+                this.emit('msg', peer, msg)
               }
               this._destroyChunks(data.id)
             }
@@ -176,9 +182,14 @@ class P2PT extends EventEmitter {
    */
   send (peer, msg, msgID = '') {
     return new Promise((resolve, reject) => {
-      var data = {
+      const data = {
         id: msgID !== '' ? msgID : Math.floor(Math.random() * 100000 + 100000),
-        msg: msg
+        msg
+      }
+
+      if (typeof msg === 'object') {
+        data.msg = JSON.stringify(msg)
+        data.o = 1 // indicating object
       }
 
       try {
@@ -198,8 +209,8 @@ class P2PT extends EventEmitter {
         return reject(Error('Connection to peer closed'))
       }
 
-      var chunks = 0
-      var remaining = ''
+      let chunks = 0
+      let remaining = ''
       while (data.msg.length > 0) {
         data.c = chunks
 
@@ -223,7 +234,7 @@ class P2PT extends EventEmitter {
    */
   requestMorePeers () {
     return new Promise(resolve => {
-      for (var key in this.trackers) {
+      for (const key in this.trackers) {
         this.trackers[key].announce({
           numwant: 50
         })
@@ -237,7 +248,7 @@ class P2PT extends EventEmitter {
    */
   getTrackerStats () {
     let connectedCount = 0
-    for (var key in this.trackers) {
+    for (const key in this.trackers) {
       if (this.trackers[key].socket && this.trackers[key].socket.connected) {
         connectedCount++
       }
@@ -253,9 +264,9 @@ class P2PT extends EventEmitter {
    * Destroy object
    */
   destroy () {
-    var key
+    let key
     for (key in this.peers) {
-      for (var key2 in this.peers[key]) {
+      for (const key2 in this.peers[key]) {
         this.peers[key][key2].destroy()
       }
     }
@@ -287,7 +298,7 @@ class P2PT extends EventEmitter {
     this.msgChunks[data.id][data.c] = data.msg
 
     if (data.last) {
-      var completeMsg = this.msgChunks[data.id].join('')
+      const completeMsg = this.msgChunks[data.id].join('')
       return completeMsg
     } else {
       return false
@@ -319,7 +330,7 @@ class P2PT extends EventEmitter {
    * Initialize trackers and fetch peers
    */
   _fetchPeers () {
-    for (var key in this.announceURLs) {
+    for (const key in this.announceURLs) {
       this.trackers[key] = new WebSocketTracker(this, this.announceURLs[key])
       this.trackers[key].announce({
         numwant: 50
