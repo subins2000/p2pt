@@ -41,6 +41,8 @@ class P2PT extends EventEmitter {
     this._peerIdBuffer = randombytes(20)
     this._peerId = this._peerIdBuffer.toString('hex')
     this._peerIdBinary = this._peerIdBuffer.toString('binary')
+
+    debug('my peer id: ' + this._peerId)
   }
 
   /**
