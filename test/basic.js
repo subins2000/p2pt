@@ -1,9 +1,10 @@
 const test = require('tape')
 
-if (process.env['BROWSER_TEST']) {
-  var P2PT = require('../p2pt')
+let P2PT
+if (process.env.BROWSER_TEST) {
+  P2PT = require('../p2pt')
 } else {
-  var P2PT = require('../node')
+  P2PT = require('../node')
 }
 
 const announceURLs = [
@@ -82,7 +83,7 @@ test('tracker connections', function (t) {
 
   p2pt1.on('trackerconnect', (tracker, status) => {
     t.equal(tracker.announceUrl, announceURLs[0])
-    
+
     t.equal(status.connected, 1)
     t.equal(status.total, 1)
 
@@ -91,7 +92,7 @@ test('tracker connections', function (t) {
   })
 
   p2pt2.on('trackerwarning', (error, status) => {
-    t.match(error.message, new RegExp('connection error to ws\://127\.0\.0\.1\:404'))
+    t.match(error.message, new RegExp('connection error to ws://127.0.0.1:404'))
 
     t.equal(status.connected, 0)
     t.equal(status.total, 1)

@@ -1,9 +1,10 @@
 const test = require('tape')
 
-if (process.env['BROWSER_TEST']) {
-  var P2PT = require('../p2pt')
+let P2PT
+if (process.env.BROWSER_TEST) {
+  P2PT = require('../p2pt')
 } else {
-  var P2PT = require('../node')
+  P2PT = require('../node')
 }
 
 const announceURLs = [
@@ -14,8 +15,8 @@ const announceURLs = [
 const randomString = (length) => {
   return [...Array(length)]
     .map(() => (~~(Math.random() * 36)).toString(36))
-    .join('');
-};
+    .join('')
+}
 
 test('large message', function (t) {
   var p2pt1 = new P2PT(announceURLs, 'p2pt')
