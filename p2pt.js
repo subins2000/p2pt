@@ -13,7 +13,7 @@ const debug = require('debug')('p2pt')
 /**
  * This character would be prepended to easily identify JSON msgs
  */
-const JSON_MESSAGE_IDENTIFIER = 'p'
+const JSON_MESSAGE_IDENTIFIER = '^'
 
 /**
  * WebRTC data channel limit beyond which data is split into chunks
