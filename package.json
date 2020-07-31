@@ -5,7 +5,9 @@
   "main": "node.js",
   "browser": "p2pt.js",
   "scripts": {
-    "test": "node test/*.js && BROWSER_TEST=1 airtap --local test/*.js"
+    "test-browser": "BROWSER_TEST=1 airtap --local test/*.js",
+    "test-node": "node test/*.js",
+    "test": "npm run test-node && npm run test-browser"
   },
   "dependencies": {
     "bittorrent-tracker": "^9.14.5",
