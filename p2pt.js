@@ -198,7 +198,11 @@ class P2PT extends EventEmitter {
          * Array should atleast have one channel, otherwise peer connection is closed
          */
         if (!peer.connected) {
-          peer = this.peers[peer.id][0]
+          for (const index in this.peers[peer.id]) {
+            peer = this.peers[peer.id][index]
+
+            if (peer.connected) break
+          }
         }
 
         if (!this.responseWaiting[peer.id]) {
@@ -206,7 +210,7 @@ class P2PT extends EventEmitter {
         }
         this.responseWaiting[peer.id][data.id] = resolve
       } catch (e) {
-        return reject(Error('Connection to peer closed'))
+        return reject(Error('Connection to peer closed' + e))
       }
 
       let chunks = 0

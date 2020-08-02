@@ -12,6 +12,10 @@ const announceURLs = [
   // 'wss://tracker.btorrent.xyz:443/announce'
 ]
 
+const announceURLs1 = [
+  'ws://localhost:5001'
+]
+
 test('character message', function (t) {
   var p2pt1 = new P2PT(announceURLs, 'p2pt')
   var p2pt2 = new P2PT(announceURLs, 'p2pt')
@@ -106,27 +110,53 @@ test('tracker connections', function (t) {
 })
 
 test('peer connections', function (t) {
-  var p2pt1 = new P2PT(announceURLs, 'p2pt')
-  var p2pt2 = new P2PT(announceURLs, 'p2pt')
+  const announce = announceURLs.concat(announceURLs1)
+
+  var p2pt1 = new P2PT(announce, 'p2pt')
+  var p2pt2 = new P2PT(announce, 'p2pt')
 
   p2pt1.on('peerconnect', (peer) => {
     t.pass('Connect event emitted')
+
+    p2pt1.send(peer, 'hello')
   })
 
   p2pt1.on('peerclose', (peer) => {
     t.pass('Close event emitted')
+  })
 
-    p2pt1.destroy()
-    p2pt2.destroy()
-
-    t.end()
+  p2pt1.on('msg', (peer, msg) => {
+    // Different trackers will give same peer with same ID, but different data channels
+    // this test will check if the second data channel is used if first is closed
+    p2pt1.send(peer, 'hello3')
   })
 
   p2pt2.on('peerconnect', (peer) => {
     t.pass('Connect event emitted')
+  })
 
-    // Forcefully close connection
-    peer.destroy()
+  let msgReceiveCount = 0
+
+  p2pt2.on('msg', (peer, msg) => {
+    // t.pass('Connect event emitted')
+
+    if (msgReceiveCount === 0) {
+      setTimeout(() => {
+        p2pt2.send(peer, 'hello2')
+
+        // Forcefully close connection
+        peer.destroy()
+      }, 100)
+    } else {
+      t.equal(msg, 'hello3')
+
+      p2pt1.destroy()
+      p2pt2.destroy()
+
+      t.end()
+    }
+
+    msgReceiveCount++
   })
 
   p2pt2.on('peerclose', (peer) => {

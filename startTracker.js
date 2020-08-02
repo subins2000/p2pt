@@ -2,7 +2,7 @@ var Server = require('bittorrent-tracker').Server
 
 var server = new Server({
   udp: false, // enable udp server? [default=true]
-  http: false, // enable http server? [default=true]
+  http: true, // enable http server? [default=true]
   ws: true, // enable websocket server? [default=true]
   stats: false // enable web-based statistics? [default=true]
 })
@@ -35,4 +35,4 @@ server.on('update', function (addr) {
 server.on('stop', function (addr) {})
 
 // start tracker server listening! Use 0 to listen on a random free port.
-server.listen('5000', '0.0.0.0')
+server.listen(process.env.PORT || '5000', '0.0.0.0')
