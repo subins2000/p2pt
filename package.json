@@ -5,22 +5,26 @@
   "main": "node.js",
   "browser": "p2pt.js",
   "scripts": {
-    "build": "browserify ./p2pt.js -s P2PT > ./dist/p2pt.umd.js",
+    "build": "npm run build:umd && npm run build:umd-tiny",
+    "build:umd": "browserify ./p2pt.js -s P2PT > dist/p2pt.umd.js",
+    "build:umd-tiny": "browserify ./p2pt.js -p tinyify -s P2PT > dist/p2pt.umd.min.js",
     "test-browser": "BROWSER_TEST=1 airtap --local test/*.js",
     "test-node": "node test/*.js",
     "test": "standard && npm run test-node && npm run test-browser"
   },
   "dependencies": {
     "bittorrent-tracker": "^9.14.5",
-    "browserify": "^16.5.1",
     "randombytes": "^2.1.0",
     "simple-sha1": "^3.0.1",
     "wrtc": "^0.4.6"
   },
   "devDependencies": {
     "airtap": "^3.0.0",
+    "browserify": "^16.5.1",
     "standard": "^14.3.4",
-    "tape": "^5.0.0"
+    "tape": "^5.0.0",
+    "tinyify": "^3.0.0",
+    "uglify-js": "^3.10.1"
   },
   "repository": {
     "type": "git",
