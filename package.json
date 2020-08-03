@@ -5,12 +5,14 @@
   "main": "node.js",
   "browser": "p2pt.js",
   "scripts": {
+    "build": "browserify ./p2pt.js -s P2PT > ./dist/p2pt.umd.js",
     "test-browser": "BROWSER_TEST=1 airtap --local test/*.js",
     "test-node": "node test/*.js",
     "test": "standard && npm run test-node && npm run test-browser"
   },
   "dependencies": {
     "bittorrent-tracker": "^9.14.5",
+    "browserify": "^16.5.1",
     "randombytes": "^2.1.0",
     "simple-sha1": "^3.0.1",
     "wrtc": "^0.4.6"
