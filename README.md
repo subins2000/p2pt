@@ -15,6 +15,10 @@ Works in both browser & node environment.
 * JSON messaging system
 * Send & Respond to messages in a chain using Promise
 
+## MITM warnings
+
+- **ensure** you use trusted trackerAnnounceURLs/keep the communication encrypted by some other means, notorius entities could put deceptive trackerAnnounceURL's and read the data that goes through
+
 ## How Does It Work ?
 
 The [amazing WebTorrent](https://webtorrent.io/) library created a new kind of Torrent Trackers called "WebSocket Trackers" also known as "WebTorrent Trackers". Some torrent clients can use these new trackers to share files.
@@ -30,7 +34,21 @@ How do we find peers for torrent to download ? We use a magnet link. That magnet
 Similarly, to build our apps, we use a identifier. This identifier is converted to a valid Info Hash and sent to our **WebTorrent trackers** who will give us a list of **web peers**. These web peers would be the other users also using our app :
 
 ```
-var p2pt = new P2PT(trackersAnnounceURLs, 'myApp')
+// Find public WebTorrent tracker URLs here : https://github.com/ngosang/trackerslist/blob/master/trackers_all_ws.txt
+var trackersAnnounceURLs = [
+  "wss://tracker.openwebtorrent.com",
+  "wss://tracker.sloppyta.co:443/announce",
+  "wss://tracker.novage.com.ua:443/announce",
+  "wss://tracker.btorrent.xyz:443/announce",
+]
+
+var p2pt = new P2PT(trackersAnnounceURLs, '<peer-identifier>')
+
+// some available events, to see all events/an in depth documentation see https://github.com/subins2000/p2pt/blob/master/api-docs.md
+
+p2pt.on('trackerconnect', (tracker, stats) => ...)
+p2pt.on('peerconnect', peer => ...)
+p2pt.on('msg', (peer, msg) => ...)
 ```
 
 And that is how P2PT works.
