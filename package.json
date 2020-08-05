@@ -1,6 +1,6 @@
 {
   "name": "p2pt",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "P2P connections with WebTorrent trackers",
   "main": "node.js",
   "browser": "p2pt.js",
