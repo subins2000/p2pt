@@ -43,7 +43,7 @@ And that is how P2PT works.
 * [P2Chat](//github.com/subins2000/p2chat): P2P noregister instant chat
 * [Vett](//github.com/subins2000/vett): P2P Dots-and-Boxes game. [Play Here](//vett.space)
 * [WebDrop](//github.com/subins2000/WebDrop): Easily share file across devices (both LAN & over Internet)
-* [Board-IO](//github.com/elvistony/board-io): A Simple Drawing Board thats live over P2P [Try It Out!](https://elvistony.github.io/board-io)
+* [Board-IO](//github.com/elvistony/board-io "A Simple Drawing Board thats P2P"): A Simple Drawing Board thats live over P2P [Try It Out!](https://elvistony.github.io/board-io)
 
 Add yours here ! Send a PR !
 
