@@ -1,13 +1,17 @@
 {
   "name": "p2pt",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "P2P connections with WebTorrent trackers",
   "main": "node.js",
   "browser": "p2pt.js",
   "scripts": {
+    "build": "npm run build:umd && npm run build:umd-tiny",
+    "build:umd": "browserify ./p2pt.js -s P2PT > dist/p2pt.umd.js",
+    "build:umd-tiny": "browserify ./p2pt.js -p tinyify -s P2PT > dist/p2pt.umd.min.js",
     "test-browser": "BROWSER_TEST=1 airtap --local test/*.js",
     "test-node": "node test/*.js",
-    "test": "standard && npm run test-node && npm run test-browser"
+    "test:all": "npm run test-node && npm run test-browser",
+    "test": "standard && start-server-and-test 'node start-trackers.js' 5001 test:all"
   },
   "dependencies": {
     "bittorrent-tracker": "^9.14.5",
@@ -17,8 +21,10 @@
   },
   "devDependencies": {
     "airtap": "^3.0.0",
+    "browserify": "^16.5.1",
     "standard": "^14.3.4",
-    "tape": "^5.0.0"
+    "start-server-and-test": "^1.11.2",
+    "tinyify": "^3.0.0"
   },
   "repository": {
     "type": "git",

@@ -1,4 +1,4 @@
-server: ./startTracker.js 
+# server: ./start-trackers.js 
 browsers:
   - name: chrome
     version: latest
