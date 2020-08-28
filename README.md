@@ -17,7 +17,9 @@ Works in both browser & node environment.
 
 ## MITM warnings
 
-- **ensure** you use trusted trackerAnnounceURLs/keep the communication encrypted by some other means, notorius entities could put deceptive trackerAnnounceURL's and read the data that goes through
+- **ensure** you use trusted trackerAnnounceURLs/keep the communication encrypted by some other means, notorius entities could put deceptive trackerAnnounceURL's and read the data that goes through via an mitm attack
+
+- alternatively, create multiple P2PT connections to the same person via the same identifier but different trackerAnnounceURLs, then ensure that connections are sending the same message, then optimize this connection by exchanging a public key on both sides, ensuring the same public key has been sent via all connections, and then creating an encrypted connection over one of the connections. (TODO, create an option that does this de-facto, and easily)
 
 ## How Does It Work ?
 
