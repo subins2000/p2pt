@@ -24,6 +24,7 @@
     "browserify": "^16.5.1",
     "standard": "^14.3.4",
     "start-server-and-test": "^1.11.2",
+    "tape": "^5.0.1",
     "tinyify": "^3.0.0"
   },
   "repository": {
@@ -41,5 +42,10 @@
   "bugs": {
     "url": "https://github.com/subins2000/p2pt/issues"
   },
-  "homepage": "https://github.com/subins2000/p2pt#readme"
+  "homepage": "https://github.com/subins2000/p2pt#readme",
+  "standard": {
+    "ignore": [
+      "dist"
+    ]
+  }
 }
