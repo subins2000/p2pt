@@ -109,6 +109,51 @@ test('tracker connections', function (t) {
   p2pt1.start()
 })
 
+test('tracker addition', function (t) {
+  const p2pt1 = new P2PT(announceURLs, 'p2pt')
+  const p2pt2 = new P2PT(announceURLs1, 'p2pt')
+
+  p2pt1.on('peerconnect', (peer) => {
+    t.pass('Connect event emitted')
+
+    p2pt1.destroy()
+    p2pt2.destroy()
+    t.end()
+  })
+
+  p2pt1.start()
+  p2pt2.start()
+
+  // let 1st p2pt1 know of tracker p2pt2 is using
+  p2pt1.addTracker(announceURLs1[0])
+})
+
+test('tracker removal', function (t) {
+  const p2pt1 = new P2PT(announceURLs, 'p2pt')
+  const p2pt2 = new P2PT(announceURLs, 'p2pt')
+
+  p2pt1.on('msg', (peer, msg) => {
+    if (msg === 'hello') {
+      t.pass('Connection remained after tracker removal')
+
+      p2pt1.destroy()
+      p2pt2.destroy()
+      t.end()
+    }
+  })
+
+  p2pt2.on('peerconnect', peer => {
+    p2pt2.removeTracker(announceURLs[0])
+
+    setTimeout(() => {
+      p2pt2.send(peer, 'hello')
+    }, 1000)
+  })
+
+  p2pt1.start()
+  p2pt2.start()
+})
+
 test('peer connections', function (t) {
   const announce = announceURLs.concat(announceURLs1)
 
