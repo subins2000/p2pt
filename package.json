@@ -16,7 +16,9 @@
   "dependencies": {
     "bittorrent-tracker": "^9.14.5",
     "randombytes": "^2.1.0",
-    "simple-sha1": "^3.0.1",
+    "simple-sha1": "^3.0.1"
+  },
+  "optionalDependencies": {
     "wrtc": "^0.4.6"
   },
   "devDependencies": {
