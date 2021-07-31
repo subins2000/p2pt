@@ -9,7 +9,7 @@ if (process.env.BROWSER_TEST) {
 
 const announceURLs = [
   'ws://localhost:5000'
-  // 'wss://tracker.btorrent.xyz:443/announce'
+  // 'wss://tracker.btorrent.xyz:443/'
 ]
 
 const randomString = (length) => {

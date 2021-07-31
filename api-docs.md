@@ -67,9 +67,9 @@ Instantiates the class
 // Find public WebTorrent tracker URLs here : https://github.com/ngosang/trackerslist/blob/master/trackers_all_ws.txt
 var trackersAnnounceURLs = [
   "wss://tracker.openwebtorrent.com",
-  "wss://tracker.sloppyta.co:443/announce",
-  "wss://tracker.novage.com.ua:443/announce",
-  "wss://tracker.btorrent.xyz:443/announce",
+  "wss://tracker.sloppyta.co:443/",
+  "wss://tracker.novage.com.ua:443/",
+  "wss://tracker.btorrent.xyz:443/",
 ]
 
 // This 'myApp' is called identifier and should be unique to your app
