@@ -11,7 +11,6 @@
   * [`setIdentifier(identifierString)`](#setidentifieridentifierstring)
   * [`start()`](#start)
   * [`requestMorePeers()`](#requestmorepeers)
-  * [`removePeer(peerId)`](#removepeerpeerid)
   * [`send(peer, msg[, msgID = ''])`](#sendpeer-msg-msgid--)
   * [`destroy()`](#destroy)
 
