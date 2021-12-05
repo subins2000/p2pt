@@ -19,6 +19,11 @@ The P2PT class is defined and exposed by the `p2pt` module :
 ```javascript
 const P2PT = require('p2pt')
 ```
+In Typescript, you can use
+```typescript
+import P2PT from "p2pt";
+```
+
 
 This is the base class that needs to be instantiated to use this library. It provides the API to implement P2P connections, communicate messages (even large content!) using WebTorrent WebSocket Trackers as the signalling server.
 
@@ -73,6 +78,16 @@ var trackersAnnounceURLs = [
 
 // This 'myApp' is called identifier and should be unique to your app
 var p2pt = new P2PT(trackersAnnounceURLs, 'myApp')
+```
+
+In Typescript, the `P2PT` class accepts an optional type parameter to constrain the type of messages you can pass to the `send` function. It doesn't constrain the type of messages you recieve, since any peer *could* send anything.
+```typescript
+type Msg = 'hello' | { goodbye: boolean }
+const p2pt = new P2PT<Msg>(trackersAnnounceURLs, 'myApp')
+// ... find a peer ...
+p2pt.send(peer, 'some_message') // TS typecheck error: Argument of type 'string' is not assignable to parameter of type 'Msg'.
+p2pt.send(peer, 'hello') // ok!
+p2pt.send(peer, { goodbye: true }) // ok!
 ```
 
 ### `setIdentifier(identifierString)`
