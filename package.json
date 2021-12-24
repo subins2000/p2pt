@@ -1,9 +1,10 @@
 {
   "name": "p2pt",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "P2P connections with WebTorrent trackers",
   "main": "node.js",
   "browser": "p2pt.js",
+  "types": "p2pt.d.ts",
   "scripts": {
     "build": "npm run build:umd && npm run build:umd-tiny",
     "build:umd": "browserify ./p2pt.js -s P2PT > dist/p2pt.umd.js",
