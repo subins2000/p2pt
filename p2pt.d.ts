@@ -11,6 +11,10 @@ declare module "p2pt" {
       msg: SendableMessage,
       msgID: number = ""
     ): Promise<[peer: Peer, msg: object]>;
+    addTracker(announceURL: string): void;
+    removeTracker(announceURL: string): void;
+    requestMorePeers(): void;
+    getTrackerStats(): TrackerStats;
     destroy(): void;
 
     on(event: "peerconnect", callback: (peer: Peer) => void);
@@ -19,11 +23,11 @@ declare module "p2pt" {
     on(event: "peerclose", callback: (peer: Peer) => void);
     on(
       event: "trackerconnect",
-      callback: (tracker: Tracker, stats: object) => void
+      callback: (tracker: Tracker, stats: TrackerStats) => void
     );
     on(
       event: "trackerwarning",
-      callback: (error: object, stats: object) => void
+      callback: (error: object, stats: TrackerStats) => void
     );
   }
   export interface Peer {
@@ -32,5 +36,9 @@ declare module "p2pt" {
   }
   export interface Tracker {
     announceUrl: string;
+  }
+  export interface TrackerStats {
+    connected: number;
+    total: number;
   }
 }
