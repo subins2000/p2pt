@@ -41,7 +41,7 @@ And that is how P2PT works.
 
 * [P2Wiki](//github.com/subins2000/p2wiki): Decentralized P2P proxy to access Wikipedia
 * [P2Chat](//github.com/subins2000/p2chat): P2P noregister instant chat
-* [Vett](//github.com/subins2000/vett): P2P Dots-and-Boxes game. [Play Here](//vett.space)
+* [Vett](//github.com/subins2000/vett): P2P Dots-and-Boxes game. [Play Here](//dots.subinsb.com)
 * [WebDrop](//github.com/subins2000/WebDrop): Easily share file across devices (both LAN & over Internet)
 * [Board-IO](//github.com/elvistony/board-io "A Simple Drawing Board thats P2P"): A Simple Drawing Board that's live over P2P. [Try It Out!](https://elvistony.github.io/board-io)
 * [Rock Paper Scissor](https://github.com/prinzpiuz/Stone-Paper-Scissor): P2P Rock Paper Scissor game [Play Here](https://silly-fermat-36c0e6.netlify.app/#/)
