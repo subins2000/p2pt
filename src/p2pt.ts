@@ -31,12 +31,7 @@ interface Peer extends Instance {
 }
 
 class P2PT extends EventEmitter {
-  announce: string[] = [
-    'wss://tracker.files.fm:7073/announce',
-    'wss://tracker.btorrent.xyz',
-    'wss://spacetradersapi-chatbox.herokuapp.com:443/announce',
-    'ws://tracker.files.fm:7072/announce'
-  ];
+  announce: string[] = [];
   trackers: { [key: string]: WebSocketTracker } = {};
   peers: { [key: string]: { [key: string]: Peer } } = {};
   responseWaiting: { [key: string]: { [key: string]: (value: unknown) => void } } = {};
