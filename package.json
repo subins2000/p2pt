@@ -6,12 +6,11 @@
   "browser": "dist/p2pt.js",
   "types": "dist/p2pt.d.ts",
   "scripts": {
-    "esbuild": "esr esbuild.ts",
     "build": "tsc && esr esbuild.ts",
     "test-browser": "BROWSER_TEST=1 airtap --local test/*.js",
     "test-node": "node test/*.js",
     "test:all": "npm run test-node && npm run test-browser",
-    "test": "standard && start-server-and-test 'node start-trackers.js' 5001 test:all"
+    "test": "standard && start-server-and-test 'esr start-trackers.ts' 5001 test:all"
   },
   "dependencies": {
     "bittorrent-tracker": "^9.19.0",
