@@ -6,40 +6,40 @@
   "browser": "dist/p2pt.js",
   "types": "dist/p2pt.d.ts",
   "scripts": {
-    "build": "npm run build:node && npm run build:browser",
-    "build:node": "tsc && esbuild src/p2pt.ts --outfile=dist/node.js --platform=node --minify --sourcemap=external",
-    "build:browser": "tsc && esbuild src/*.ts --outdir=dist --minify --bundle --define:global=window --inject:esbuild.inject.js --legal-comments=none --sourcemap=external",
+    "esbuild": "esr esbuild.ts",
+    "build": "tsc && esr esbuild.ts",
     "test-browser": "BROWSER_TEST=1 airtap --local test/*.js",
     "test-node": "node test/*.js",
     "test:all": "npm run test-node && npm run test-browser",
     "test": "standard && start-server-and-test 'node start-trackers.js' 5001 test:all"
   },
   "dependencies": {
-    "bittorrent-tracker": "^9.14.5",
+    "bittorrent-tracker": "^9.19.0",
     "randombytes": "^2.1.0",
-    "simple-sha1": "^3.0.1"
+    "simple-sha1": "^3.1.0"
   },
   "optionalDependencies": {
-    "wrtc": "^0.4.6"
+    "wrtc": "^0.4.7"
   },
   "devDependencies": {
     "@types/node": "^18.11.9",
     "@types/randombytes": "^2.0.0",
     "@types/simple-peer": "^9.11.5",
     "@types/simple-sha1": "^3.0.0",
+    "@types/tape": "^4.13.2",
     "@typescript-eslint/eslint-plugin": "^5.42.0",
     "@typescript-eslint/parser": "^5.42.0",
-    "airtap": "^3.0.0",
-    "browserify": "^16.5.1",
+    "airtap": "^4.0.4",
+    "browserify": "^17.0.0",
     "buffer": "^6.0.3",
     "esbuild": "^0.15.12",
     "esbuild-runner": "^2.2.2",
     "eslint": "^8.26.0",
     "simple-peer": "^9.11.1",
-    "standard": "^14.3.4",
-    "start-server-and-test": "^1.11.2",
-    "tape": "^5.0.1",
-    "tinyify": "^3.0.0",
+    "standard": "^17.0.0",
+    "start-server-and-test": "^1.14.0",
+    "tape": "^5.6.1",
+    "tinyify": "^4.0.0",
     "typescript": "^4.8.4"
   },
   "repository": {
