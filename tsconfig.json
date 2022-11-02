@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "ESNext",
+      "dom"
+    ], 
+    "outDir": "dist", 
+    "removeComments": true, 
+    "target": "ES2015", 
+    "baseUrl": "./", 
+    "esModuleInterop": true, 
+    "moduleResolution": "node", 
+    "paths": {}, 
+    "sourceMap": true,
+    "sourceRoot": "src", 
+    "declaration": true
+  },
+  "include": ["./**/*.ts"],
+  "exclude": [
+    "node_modules/**/*"
+  ]
+}
