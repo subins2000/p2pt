@@ -7,8 +7,8 @@
   "types": "p2pt.d.ts",
   "scripts": {
     "build": "npm run build:node && npm run build:browser",
-    "build:node": "tsc && esbuild src/p2pt.ts --outfile=dist/node.js --platform=node --minify",
-    "build:browser": "tsc && esbuild src/*.ts --outdir=dist --minify --bundle --define:global=window --inject:esbuild.inject.js --legal-comments=none",
+    "build:node": "tsc && esbuild src/p2pt.ts --outfile=dist/node.js --platform=node --minify --sourcemap=external",
+    "build:browser": "tsc && esbuild src/*.ts --outdir=dist --minify --bundle --define:global=window --inject:esbuild.inject.js --legal-comments=none --sourcemap=external",
     "test-browser": "BROWSER_TEST=1 airtap --local test/*.js",
     "test-node": "node test/*.js",
     "test:all": "npm run test-node && npm run test-browser",
