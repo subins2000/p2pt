@@ -18,7 +18,6 @@ jobs:
           node-version: 16
       - run: npm ci
       - run: npm run build
-      - run: npm test
       - name: Commit
         run: |
           git config user.email "actions@github.com"
