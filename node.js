@@ -1,5 +1,5 @@
 const BrowserP2PT = require('./p2pt')
-const wrtc = require('wrtc')
+const wrtc = require('@koush/wrtc')
 
 class P2PT extends BrowserP2PT {
   /**

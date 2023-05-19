@@ -9147,7 +9147,7 @@ Peer.config = {
       urls: 'stun:stun.l.google.com:19302'
     },
     {
-      urls: 'stun:global.stun.twilio.com:3478?transport=udp'
+      urls: 'stun:global.stun.twilio.com:3478'
     }
   ],
   sdpSemantics: 'unified-plan'
@@ -10135,9 +10135,17 @@ class P2PT extends EventEmitter {
 
         data.msg = remaining
         chunks++
+	if((chunks % 100) == 0){
+          await sleep(500);
+        }
       }
-
+	setTimeout(()=>{
+		resolve(null);
+	},60000);
       debug('sent a message to ' + peer.id)
+      function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+      }
     })
   }
 

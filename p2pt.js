@@ -214,7 +214,7 @@ class P2PT extends EventEmitter {
    * @param integer msgID ID of message if it's a response to a previous message
    */
   send (peer, msg, msgID = '') {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       const data = {
         id: msgID !== '' ? msgID : Math.floor(Math.random() * 100000 + 100000),
         msg
@@ -260,9 +260,18 @@ class P2PT extends EventEmitter {
 
         data.msg = remaining
         chunks++
+        if((chunks % 100) == 0){
+          await sleep(500);
+        }
       }
-
+      setTimeout(()=>{
+        resolve(null);
+      },60000);
       debug('sent a message to ' + peer.id)
+      //Waiting every 1.6M, thus preventing the peer from closing the connection because it thinks it is attacking DDOS, thus accepting files greater than 20M.
+      function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+      }
     })
   }
 

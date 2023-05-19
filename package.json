@@ -15,12 +15,13 @@
     "test": "standard && start-server-and-test 'node start-trackers.js' 5001 test:all"
   },
   "dependencies": {
+    "wrtc": "^0.4.7",
     "bittorrent-tracker": "^9.14.5",
     "randombytes": "^2.1.0",
     "simple-sha1": "^3.0.1"
   },
   "optionalDependencies": {
-    "wrtc": "^0.4.6"
+    "@koush/wrtc": "^0.5.3"
   },
   "devDependencies": {
     "airtap": "^3.0.0",
