@@ -17,7 +17,7 @@
 ## Class: `P2PT extends EventEmitter`
 The P2PT class is defined and exposed by the `p2pt` module :
 ```javascript
-const P2PT = require('p2pt')
+import P2PT from 'p2pt'
 ```
 In Typescript, you can use
 ```typescript
@@ -69,7 +69,7 @@ Instantiates the class
 
 ```javascript
 // Find public WebTorrent tracker URLs here : https://github.com/ngosang/trackerslist/blob/master/trackers_all_ws.txt
-var trackersAnnounceURLs = [
+const trackersAnnounceURLs = [
   "wss://tracker.openwebtorrent.com",
   "wss://tracker.sloppyta.co:443/",
   "wss://tracker.novage.com.ua:443/",
@@ -77,7 +77,7 @@ var trackersAnnounceURLs = [
 ]
 
 // This 'myApp' is called identifier and should be unique to your app
-var p2pt = new P2PT(trackersAnnounceURLs, 'myApp')
+const p2pt = new P2PT(trackersAnnounceURLs, 'myApp')
 ```
 
 In Typescript, the `P2PT` class accepts an optional type parameter to constrain the type of messages you can pass to the `send` function. It doesn't constrain the type of messages you recieve, since any peer *could* send anything.
