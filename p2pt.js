@@ -7,7 +7,7 @@
 import WebSocketTracker from 'bittorrent-tracker/lib/client/websocket-tracker.js'
 import EventEmitter from 'events'
 import Debug from 'debug'
-import { randomBytes, arr2hex, hex2bin, hex2arr, hash } from 'uint8-util'
+import { randomBytes, arr2hex, hex2bin, hex2arr, hash, arr2text } from 'uint8-util'
 
 const debug = Debug('p2pt')
 
@@ -88,7 +88,7 @@ export default class P2PT extends EventEmitter {
       peer.on('data', data => {
         this.emit('data', peer, data)
 
-        data = data.toString()
+        if (ArrayBuffer.isView(data)) data = arr2text(data)
 
         debug('got a message from ' + peer.id)
 
