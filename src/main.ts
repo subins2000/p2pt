@@ -26,14 +26,12 @@ const MAX_MESSAGE_LENGTH = 16000
 
 class P2PT extends EventEmitter {
   public announceURLs: string[]
-  
-  private _peerId: string
 
-  // Both of these are accessed by WebsocketTracker.
-  // @ts-ignore
-  private _peerIdBuffer: string
-  // @ts-ignore
-  private _peerIdBinary: string
+  private readonly _peerId: string
+
+  private readonly _peerIdBuffer: string
+  // @ts-expect-error Accessed by WebsocketTracker
+  private readonly _peerIdBinary: string
 
   /**
    *
@@ -49,7 +47,9 @@ class P2PT extends EventEmitter {
     this.msgChunks = {}
     this.responseWaiting = {}
 
-    if (identifierString) { this.setIdentifier(identifierString) }
+    if (identifierString) {
+      this.setIdentifier(identifierString)
+    }
 
     this._peerIdBuffer = randomBytes(20)
     this._peerId = arr2hex(this._peerIdBuffer)
@@ -73,7 +73,7 @@ class P2PT extends EventEmitter {
    * Connect to network and start discovering peers
    */
   start () {
-    this.on('peer', peer => {
+    this.on('peer', (peer) => {
       let newpeer = false
       if (!this.peers[peer.id]) {
         newpeer = true
@@ -95,7 +95,7 @@ class P2PT extends EventEmitter {
         }
       })
 
-      peer.on('data', data => {
+      peer.on('data', (data) => {
         this.emit('data', peer, data)
 
         data = data.toString()
@@ -134,7 +134,7 @@ class P2PT extends EventEmitter {
         }
       })
 
-      peer.on('error', err => {
+      peer.on('error', (err) => {
         this._removePeer(peer)
         debug('Error in connection : ' + err)
       })
@@ -146,23 +146,16 @@ class P2PT extends EventEmitter {
     })
 
     // Tracker responded to the announce request
-    this.on('update', response => {
-      const tracker = this.trackers[this.announceURLs.indexOf(response.announce)]
+    this.on('update', (response) => {
+      const tracker =
+        this.trackers[this.announceURLs.indexOf(response.announce)]
 
-      this.emit(
-        'trackerconnect',
-        tracker,
-        this.getTrackerStats()
-      )
+      this.emit('trackerconnect', tracker, this.getTrackerStats())
     })
 
     // Errors in tracker connection
-    this.on('warning', err => {
-      this.emit(
-        'trackerwarning',
-        err,
-        this.getTrackerStats()
-      )
+    this.on('warning', (err) => {
+      this.emit('trackerwarning', err, this.getTrackerStats())
     })
 
     this._fetchPeers()
@@ -173,7 +166,7 @@ class P2PT extends EventEmitter {
    * @param string announceURL Tracker Announce URL
    */
   addTracker (announceURL) {
-    if (this.announceURLs.indexOf(announceURL) !== -1) {
+    if (this.announceURLs.includes(announceURL)) {
       throw new Error('Tracker already added')
     }
 
@@ -206,7 +199,9 @@ class P2PT extends EventEmitter {
    * @param integer id Peer ID
    */
   _removePeer (peer) {
-    if (!this.peers[peer.id]) { return false }
+    if (!this.peers[peer.id]) {
+      return false
+    }
 
     delete this.peers[peer.id][peer.channelName]
 
@@ -225,8 +220,8 @@ class P2PT extends EventEmitter {
    * @param string msg Message to send
    * @param integer msgID ID of message if it's a response to a previous message
    */
-  send (peer, msg, msgID = '') {
-    return new Promise((resolve, reject) => {
+  async send (peer, msg, msgID = '') {
+    return await new Promise((resolve, reject) => {
       const data = {
         id: msgID !== '' ? msgID : Math.floor(Math.random() * 100000 + 100000),
         msg
@@ -255,7 +250,7 @@ class P2PT extends EventEmitter {
         }
         this.responseWaiting[peer.id][data.id] = resolve
       } catch (e) {
-        return reject(Error('Connection to peer closed' + e))
+        reject(Error('Connection to peer closed' + e)); return
       }
 
       let chunks = 0
@@ -266,7 +261,9 @@ class P2PT extends EventEmitter {
         remaining = data.msg.slice(MAX_MESSAGE_LENGTH)
         data.msg = data.msg.slice(0, MAX_MESSAGE_LENGTH)
 
-        if (!remaining) { data.last = true }
+        if (!remaining) {
+          data.last = true
+        }
 
         peer.send(JSON_MESSAGE_IDENTIFIER + JSON.stringify(data))
 
@@ -281,8 +278,8 @@ class P2PT extends EventEmitter {
   /**
    * Request more peers
    */
-  requestMorePeers () {
-    return new Promise(resolve => {
+  async requestMorePeers () {
+    return await new Promise((resolve) => {
       for (const key in this.trackers) {
         this.trackers[key].announce(this._defaultAnnounceOpts())
       }
@@ -328,8 +325,8 @@ class P2PT extends EventEmitter {
    * @param integer msgID Message ID
    */
   _peerRespond (peer, msgID) {
-    return msg => {
-      return this.send(peer, msg, msgID)
+    return async (msg) => {
+      return await this.send(peer, msg, msgID)
     }
   }
 

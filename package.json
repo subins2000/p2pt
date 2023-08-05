@@ -13,7 +13,6 @@
     "test-node": "node test/*.js",
     "test:all": "npm run test-node && npm run test-browser",
     "test": "standard && start-server-and-test 'node start-trackers.js' 5001 test:all",
-
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview"
@@ -22,8 +21,8 @@
     "bittorrent-tracker": "^10.0.10",
     "debug": "4.3.4",
     "events": "3.3.0",
-    "uint8-util": "2.2.2",
-    "simple-sha1": "^3.0.1"
+    "simple-sha1": "^3.0.1",
+    "uint8-util": "2.2.2"
   },
   "optionalDependencies": {
     "wrtc": "^0.4.6"
@@ -31,7 +30,8 @@
   "devDependencies": {
     "airtap": "^3.0.0",
     "browserify": "^16.5.1",
-    "standard": "^14.3.4",
+    "eslint": "^8.46.0",
+    "eslint-config-standard-with-typescript": "^37.0.0",
     "start-server-and-test": "^1.11.2",
     "tape": "^5.0.1",
     "tinyify": "^3.0.0",
