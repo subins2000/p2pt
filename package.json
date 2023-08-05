@@ -5,18 +5,24 @@
   "main": "node.js",
   "browser": "p2pt.js",
   "types": "p2pt.d.ts",
+  "type": "module",
   "scripts": {
-    "build": "npm run build:umd && npm run build:umd-tiny",
     "build:umd": "browserify ./p2pt.js -s P2PT > dist/p2pt.umd.js",
     "build:umd-tiny": "browserify ./p2pt.js -p tinyify -s P2PT > dist/p2pt.umd.min.js",
     "test-browser": "BROWSER_TEST=1 airtap --local test/*.js",
     "test-node": "node test/*.js",
     "test:all": "npm run test-node && npm run test-browser",
-    "test": "standard && start-server-and-test 'node start-trackers.js' 5001 test:all"
+    "test": "standard && start-server-and-test 'node start-trackers.js' 5001 test:all",
+
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "bittorrent-tracker": "^9.14.5",
-    "randombytes": "^2.1.0",
+    "bittorrent-tracker": "^10.0.10",
+    "debug": "4.3.4",
+    "events": "3.3.0",
+    "uint8-util": "2.2.2",
     "simple-sha1": "^3.0.1"
   },
   "optionalDependencies": {
@@ -28,7 +34,9 @@
     "standard": "^14.3.4",
     "start-server-and-test": "^1.11.2",
     "tape": "^5.0.1",
-    "tinyify": "^3.0.0"
+    "tinyify": "^3.0.0",
+    "typescript": "^5.0.2",
+    "vite": "^4.4.5"
   },
   "repository": {
     "type": "git",
