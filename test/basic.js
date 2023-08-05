@@ -17,8 +17,8 @@ const announceURLs1 = [
 ]
 
 test('character message', function (t) {
-  var p2pt1 = new P2PT(announceURLs, 'p2pt')
-  var p2pt2 = new P2PT(announceURLs, 'p2pt')
+  const p2pt1 = new P2PT(announceURLs, 'p2pt')
+  const p2pt2 = new P2PT(announceURLs, 'p2pt')
 
   p2pt1.on('peerconnect', (peer) => {
     p2pt1.send(peer, 'hello')
@@ -37,8 +37,8 @@ test('character message', function (t) {
 })
 
 test('chained messages', function (t) {
-  var p2pt1 = new P2PT(announceURLs, 'p2pt')
-  var p2pt2 = new P2PT(announceURLs, 'p2pt')
+  const p2pt1 = new P2PT(announceURLs, 'p2pt')
+  const p2pt2 = new P2PT(announceURLs, 'p2pt')
 
   p2pt1.on('peerconnect', (peer) => {
     p2pt1
@@ -82,8 +82,8 @@ test('chained messages', function (t) {
 })
 
 test('tracker connections', function (t) {
-  var p2pt1 = new P2PT(announceURLs, 'p2pt')
-  var p2pt2 = new P2PT(['ws://127.0.0.1:404'], 'p2pt')
+  const p2pt1 = new P2PT(announceURLs, 'p2pt')
+  const p2pt2 = new P2PT(['ws://127.0.0.1:404'], 'p2pt')
 
   p2pt1.on('trackerconnect', (tracker, status) => {
     t.equal(tracker.announceUrl, announceURLs[0])
@@ -157,8 +157,8 @@ test('tracker removal', function (t) {
 test('peer connections', function (t) {
   const announce = announceURLs.concat(announceURLs1)
 
-  var p2pt1 = new P2PT(announce, 'p2pt')
-  var p2pt2 = new P2PT(announce, 'p2pt')
+  const p2pt1 = new P2PT(announce, 'p2pt')
+  const p2pt2 = new P2PT(announce, 'p2pt')
 
   p2pt1.on('peerconnect', (peer) => {
     t.pass('Connect event emitted')

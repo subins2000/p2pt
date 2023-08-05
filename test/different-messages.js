@@ -19,8 +19,8 @@ const randomString = (length) => {
 }
 
 test('large message', function (t) {
-  var p2pt1 = new P2PT(announceURLs, 'p2pt')
-  var p2pt2 = new P2PT(announceURLs, 'p2pt')
+  const p2pt1 = new P2PT(announceURLs, 'p2pt')
+  const p2pt2 = new P2PT(announceURLs, 'p2pt')
 
   const KB100 = randomString(100000) // 100KB
   const KB1000 = randomString(1000000) // 1MB
@@ -45,8 +45,8 @@ test('large message', function (t) {
 })
 
 test('json', function (t) {
-  var p2pt1 = new P2PT(announceURLs, 'p2pt')
-  var p2pt2 = new P2PT(announceURLs, 'p2pt')
+  const p2pt1 = new P2PT(announceURLs, 'p2pt')
+  const p2pt2 = new P2PT(announceURLs, 'p2pt')
 
   const KB100 = {
     hello: randomString(100000) // 100KB
