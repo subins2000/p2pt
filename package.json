@@ -16,22 +16,22 @@
     "test": "standard && start-server-and-test 'node start-trackers.js' 5001 test:all"
   },
   "dependencies": {
-    "bittorrent-tracker": "^10.0.10",
-    "uint8-util": "^2.1.9"
+    "bittorrent-tracker": "^10.0.12",
+    "uint8-util": "^2.2.2"
   },
   "optionalDependencies": {
     "wrtc": "^0.4.7"
   },
   "devDependencies": {
-    "@babel/core": "^7.22.5",
-    "@babel/preset-env": "^7.22.5",
+    "@babel/core": "^7.22.10",
+    "@babel/preset-env": "^7.22.10",
     "airtap": "^4.0.4",
     "airtap-manual": "^1.0.0",
     "babelify": "^10.0.0",
     "browserify": "^17.0.0",
     "standard": "^17.1.0",
     "start-server-and-test": "^2.0.0",
-    "tape": "^5.6.3",
+    "tape": "^5.6.6",
     "tinyify": "^4.0.0"
   },
   "repository": {
