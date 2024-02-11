@@ -1,6 +1,10 @@
 # server: ./start-trackers.js 
-browsers:
-  - name: chrome
-    version: latest
-  - name: safari
-    version: latest
+presets:
+  local:
+    providers: airtap-manual
+    browsers:
+      - name: manual
+browserify:
+  - transform: babelify
+    global: true
+    presets: ['@babel/preset-env']

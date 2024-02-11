@@ -1,11 +1,5 @@
-const test = require('tape')
-
-let P2PT
-if (process.env.BROWSER_TEST) {
-  P2PT = require('../p2pt')
-} else {
-  P2PT = require('../node')
-}
+import test from 'tape'
+import P2PT from '../p2pt.js'
 
 const announceURLs = [
   'ws://localhost:5000'
@@ -19,8 +13,8 @@ const randomString = (length) => {
 }
 
 test('large message', function (t) {
-  var p2pt1 = new P2PT(announceURLs, 'p2pt')
-  var p2pt2 = new P2PT(announceURLs, 'p2pt')
+  const p2pt1 = new P2PT(announceURLs, 'p2pt')
+  const p2pt2 = new P2PT(announceURLs, 'p2pt')
 
   const KB100 = randomString(100000) // 100KB
   const KB1000 = randomString(1000000) // 1MB
@@ -45,8 +39,8 @@ test('large message', function (t) {
 })
 
 test('json', function (t) {
-  var p2pt1 = new P2PT(announceURLs, 'p2pt')
-  var p2pt2 = new P2PT(announceURLs, 'p2pt')
+  const p2pt1 = new P2PT(announceURLs, 'p2pt')
+  const p2pt2 = new P2PT(announceURLs, 'p2pt')
 
   const KB100 = {
     hello: randomString(100000) // 100KB

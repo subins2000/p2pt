@@ -1,15 +1,8 @@
-const test = require('tape')
-
-let P2PT
-if (process.env.BROWSER_TEST) {
-  P2PT = require('../p2pt')
-} else {
-  P2PT = require('../node')
-}
+import test from 'tape'
+import P2PT from '../p2pt.js'
 
 const announceURLs = [
   'ws://localhost:5000'
-  // 'wss://tracker.btorrent.xyz:443/'
 ]
 
 const announceURLs1 = [
@@ -17,8 +10,8 @@ const announceURLs1 = [
 ]
 
 test('character message', function (t) {
-  var p2pt1 = new P2PT(announceURLs, 'p2pt')
-  var p2pt2 = new P2PT(announceURLs, 'p2pt')
+  const p2pt1 = new P2PT(announceURLs, 'p2pt')
+  const p2pt2 = new P2PT(announceURLs, 'p2pt')
 
   p2pt1.on('peerconnect', (peer) => {
     p2pt1.send(peer, 'hello')
@@ -37,8 +30,8 @@ test('character message', function (t) {
 })
 
 test('chained messages', function (t) {
-  var p2pt1 = new P2PT(announceURLs, 'p2pt')
-  var p2pt2 = new P2PT(announceURLs, 'p2pt')
+  const p2pt1 = new P2PT(announceURLs, 'p2pt')
+  const p2pt2 = new P2PT(announceURLs, 'p2pt')
 
   p2pt1.on('peerconnect', (peer) => {
     p2pt1
@@ -82,8 +75,8 @@ test('chained messages', function (t) {
 })
 
 test('tracker connections', function (t) {
-  var p2pt1 = new P2PT(announceURLs, 'p2pt')
-  var p2pt2 = new P2PT(['ws://127.0.0.1:404'], 'p2pt')
+  const p2pt1 = new P2PT(announceURLs, 'p2pt')
+  const p2pt2 = new P2PT(['ws://127.0.0.1:404'], 'p2pt')
 
   p2pt1.on('trackerconnect', (tracker, status) => {
     t.equal(tracker.announceUrl, announceURLs[0])
@@ -96,7 +89,7 @@ test('tracker connections', function (t) {
   })
 
   p2pt2.on('trackerwarning', (error, status) => {
-    t.match(error.message, new RegExp(/error(.*?)ws:\/\/127\.0\.0\.1:404/gi))
+    t.match(error.message, /error(.*?)ws:\/\/127\.0\.0\.1:404/gi)
 
     t.equal(status.connected, 0)
     t.equal(status.total, 1)
@@ -157,8 +150,8 @@ test('tracker removal', function (t) {
 test('peer connections', function (t) {
   const announce = announceURLs.concat(announceURLs1)
 
-  var p2pt1 = new P2PT(announce, 'p2pt')
-  var p2pt2 = new P2PT(announce, 'p2pt')
+  const p2pt1 = new P2PT(announce, 'p2pt')
+  const p2pt2 = new P2PT(announce, 'p2pt')
 
   p2pt1.on('peerconnect', (peer) => {
     t.pass('Connect event emitted')
@@ -175,8 +168,7 @@ test('peer connections', function (t) {
     // this test will check if the second data channel is used if first is closed
     setTimeout(() => {
       p2pt1.send(peer, 'hello3')
-      console.log(msg)
-    }, 100)
+    }, 1000)
   })
 
   p2pt2.on('peerconnect', (peer) => {

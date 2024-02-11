@@ -4,11 +4,12 @@
  * Licensed under MIT
  */
 
-const WebSocketTracker = require('bittorrent-tracker/lib/client/websocket-tracker')
-const randombytes = require('randombytes')
-const EventEmitter = require('events')
-const sha1 = require('simple-sha1')
-const debug = require('debug')('p2pt')
+import WebSocketTracker from 'bittorrent-tracker/lib/client/websocket-tracker.js'
+import EventEmitter from 'events'
+import Debug from 'debug'
+import { randomBytes, arr2hex, hex2bin, hex2arr, hash, arr2text } from 'uint8-util'
+
+const debug = Debug('p2pt')
 
 /**
  * This character would be prepended to easily identify JSON msgs
@@ -22,7 +23,7 @@ const JSON_MESSAGE_IDENTIFIER = '^'
  */
 const MAX_MESSAGE_LENGTH = 16000
 
-class P2PT extends EventEmitter {
+export default class P2PT extends EventEmitter {
   /**
    *
    * @param array announceURLs List of announce tracker URLs
@@ -39,9 +40,9 @@ class P2PT extends EventEmitter {
 
     if (identifierString) { this.setIdentifier(identifierString) }
 
-    this._peerIdBuffer = randombytes(20)
-    this._peerId = this._peerIdBuffer.toString('hex')
-    this._peerIdBinary = this._peerIdBuffer.toString('binary')
+    this._peerIdBuffer = randomBytes(20)
+    this._peerId = arr2hex(this._peerIdBuffer)
+    this._peerIdBinary = hex2bin(this._peerId)
 
     debug('my peer id: ' + this._peerId)
   }
@@ -50,17 +51,18 @@ class P2PT extends EventEmitter {
    * Set the identifier string used to discover peers in the network
    * @param string identifierString
    */
-  setIdentifier (identifierString) {
+  async setIdentifier (identifierString) {
     this.identifierString = identifierString
-    this.infoHash = sha1.sync(identifierString).toLowerCase()
-    this._infoHashBuffer = Buffer.from(this.infoHash, 'hex')
-    this._infoHashBinary = this._infoHashBuffer.toString('binary')
+    this.infoHash = hash(identifierString, 'hex')
+    this._infoHashBuffer = hex2arr((await this.infoHash).toLowerCase())
+    this._infoHashBinary = hex2bin((await this.infoHash).toLowerCase())
   }
 
   /**
    * Connect to network and start discovering peers
    */
-  start () {
+  async start () {
+    await this.infoHash
     this.on('peer', peer => {
       let newpeer = false
       if (!this.peers[peer.id]) {
@@ -86,7 +88,7 @@ class P2PT extends EventEmitter {
       peer.on('data', data => {
         this.emit('data', peer, data)
 
-        data = data.toString()
+        if (ArrayBuffer.isView(data)) data = arr2text(data)
 
         debug('got a message from ' + peer.id)
 
@@ -371,5 +373,3 @@ class P2PT extends EventEmitter {
     }
   }
 }
-
-module.exports = P2PT

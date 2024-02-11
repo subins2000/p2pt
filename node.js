@@ -1,7 +1,7 @@
-const BrowserP2PT = require('./p2pt')
-const wrtc = require('wrtc')
+import BrowserP2PT from './p2pt'
+import wrtc from 'wrtc'
 
-class P2PT extends BrowserP2PT {
+export default class P2PT extends BrowserP2PT {
   /**
    *
    * @param array announceURLs List of announce tracker URLs
@@ -13,5 +13,3 @@ class P2PT extends BrowserP2PT {
     this._wrtc = wrtc
   }
 }
-
-module.exports = P2PT
