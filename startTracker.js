@@ -1,4 +1,4 @@
-const Server = require('bittorrent-tracker').Server
+import { Server } from 'bittorrent-tracker'
 
 const server = new Server({
   udp: false, // enable udp server? [default=true]

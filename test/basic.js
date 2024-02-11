@@ -2,9 +2,7 @@ import test from 'tape'
 import P2PT from '../p2pt.js'
 
 const announceURLs = [
-  'ws://localhost:5000',
-  'wss://tracker.btorrent.xyz',
-  'wss://tracker.webtorrent.dev'
+  'ws://localhost:5000'
 ]
 
 const announceURLs1 = [
@@ -170,8 +168,7 @@ test('peer connections', function (t) {
     // this test will check if the second data channel is used if first is closed
     setTimeout(() => {
       p2pt1.send(peer, 'hello3')
-      console.log(msg)
-    }, 100)
+    }, 1000)
   })
 
   p2pt2.on('peerconnect', (peer) => {
