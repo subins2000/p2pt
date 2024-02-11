@@ -173,7 +173,10 @@ test('peer connections', function (t) {
   p2pt1.on('msg', (peer, msg) => {
     // Different trackers will give same peer with same ID, but different data channels
     // this test will check if the second data channel is used if first is closed
-    p2pt1.send(peer, 'hello3')
+    setTimeout(() => {
+      p2pt1.send(peer, 'hello3')
+      console.log(msg)
+    }, 100)
   })
 
   p2pt2.on('peerconnect', (peer) => {
