@@ -1,5 +1,5 @@
-import BrowserP2PT from './p2pt'
-import wrtc from 'wrtc'
+import BrowserP2PT from './p2pt.js'
+import wrtc from '@roamhq/wrtc'
 
 export default class P2PT extends BrowserP2PT {
   /**

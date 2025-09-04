@@ -1,9 +1,13 @@
-import test from 'tape'
-import P2PT from '../p2pt.js'
+import test from './utils.js'
+import P2PT from '../src/p2pt.js'
 
 const announceURLs = [
   'ws://localhost:5000'
   // 'wss://tracker.btorrent.xyz:443/'
+]
+
+const announceURLsSet2 = [
+  'ws://localhost:5000/'
 ]
 
 const randomString = (length) => {
@@ -14,7 +18,7 @@ const randomString = (length) => {
 
 test('large message', function (t) {
   const p2pt1 = new P2PT(announceURLs, 'p2pt')
-  const p2pt2 = new P2PT(announceURLs, 'p2pt')
+  const p2pt2 = new P2PT(announceURLsSet2, 'p2pt')
 
   const KB100 = randomString(100000) // 100KB
   const KB1000 = randomString(1000000) // 1MB
@@ -40,7 +44,7 @@ test('large message', function (t) {
 
 test('json', function (t) {
   const p2pt1 = new P2PT(announceURLs, 'p2pt')
-  const p2pt2 = new P2PT(announceURLs, 'p2pt')
+  const p2pt2 = new P2PT(announceURLsSet2, 'p2pt')
 
   const KB100 = {
     hello: randomString(100000) // 100KB

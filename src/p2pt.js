@@ -4,7 +4,7 @@
  * Licensed under MIT
  */
 
-import WebSocketTracker from 'bittorrent-tracker/lib/client/websocket-tracker.js'
+import WebSocketTracker from '../node_modules/bittorrent-tracker/lib/client/websocket-tracker.js'
 import EventEmitter from 'events'
 import Debug from 'debug'
 import { randomBytes, arr2hex, hex2bin, hex2arr, hash, arr2text } from 'uint8-util'
@@ -37,6 +37,9 @@ export default class P2PT extends EventEmitter {
     this.peers = {}
     this.msgChunks = {}
     this.responseWaiting = {}
+    this._rtcConfig = {
+      iceServers: []
+    }
 
     if (identifierString) { this.setIdentifier(identifierString) }
 

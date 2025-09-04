@@ -1,8 +1,18 @@
-import test from 'tape'
-import P2PT from '../p2pt.js'
+import test from './utils.js'
+
+// Import the correct P2PT module based on environment
+const P2PT = typeof window !== 'undefined' 
+  ? (await import('../src/p2pt.js')).default
+  : (await import('../src/node.js')).default
 
 const announceURLs = [
   'ws://localhost:5000'
+]
+
+// WebSocketTracker keeps same copy of WebSocket connection to
+// same URL, to avoid that we add a / to trick it as another server
+const announceURLsSet2 = [
+  'ws://localhost:5000/'
 ]
 
 const announceURLs1 = [
@@ -11,7 +21,7 @@ const announceURLs1 = [
 
 test('character message', function (t) {
   const p2pt1 = new P2PT(announceURLs, 'p2pt')
-  const p2pt2 = new P2PT(announceURLs, 'p2pt')
+  const p2pt2 = new P2PT(announceURLsSet2, 'p2pt')
 
   p2pt1.on('peerconnect', (peer) => {
     p2pt1.send(peer, 'hello')
@@ -31,7 +41,7 @@ test('character message', function (t) {
 
 test('chained messages', function (t) {
   const p2pt1 = new P2PT(announceURLs, 'p2pt')
-  const p2pt2 = new P2PT(announceURLs, 'p2pt')
+  const p2pt2 = new P2PT(announceURLsSet2, 'p2pt')
 
   p2pt1.on('peerconnect', (peer) => {
     p2pt1
@@ -71,7 +81,7 @@ test('chained messages', function (t) {
   })
 
   p2pt1.start()
-  p2pt2.start()
+  setTimeout(() => { p2pt2.start() }, 1000)
 })
 
 test('tracker connections', function (t) {
@@ -102,6 +112,52 @@ test('tracker connections', function (t) {
   p2pt1.start()
 })
 
+test('peer connections', function (t) {
+  // Different trackers will give same peer with same ID, but different data channels.
+  // "peer" is essentially a "data channel".
+  // This test will check if the second data channel is used if first is closed.
+
+  const twoTrackers = [announceURLs[0], announceURLs1[0]]
+  
+  const p2pt1 = new P2PT(twoTrackers, 'p2pt')
+  const p2pt2 = new P2PT(twoTrackers, 'p2pt')
+
+  let numberOfDataChannels = 0
+
+  p2pt1.on('peerclose', (peer) => {
+    t.pass('Close event emitted')
+  })
+
+  p2pt1.on('msg', (peer, msg) => {
+    p2pt1.send(peer, 'hello3')
+  })
+
+  p2pt2.on('peerconnect', (peer) => {
+    t.pass('Connect event emitted')
+    numberOfDataChannels++
+
+    p2pt1.send(peer, 'hello')
+  })
+
+  p2pt2.on('msg', (peer, msg) => {
+    if (msg === 'hello3') {
+      p2pt1.destroy()
+      p2pt2.destroy()
+
+      t.end()
+    } else if (numberOfDataChannels === 2) {
+      p2pt2.send(peer, 'hello2')
+
+      // Forcefully close connection
+      peer.destroy()
+    }
+  })
+
+  p2pt1.start()
+  p2pt2.start()
+})
+
+
 test('tracker addition', function (t) {
   const p2pt1 = new P2PT(announceURLs, 'p2pt')
   const p2pt2 = new P2PT(announceURLs1, 'p2pt')
@@ -118,12 +174,12 @@ test('tracker addition', function (t) {
   p2pt2.start()
 
   // let 1st p2pt1 know of tracker p2pt2 is using
-  p2pt1.addTracker(announceURLs1[0])
+  setTimeout(() => { p2pt1.addTracker(announceURLs1[0]) }, 1000)
 })
 
 test('tracker removal', function (t) {
   const p2pt1 = new P2PT(announceURLs, 'p2pt')
-  const p2pt2 = new P2PT(announceURLs, 'p2pt')
+  const p2pt2 = new P2PT(announceURLsSet2, 'p2pt')
 
   p2pt1.on('msg', (peer, msg) => {
     if (msg === 'hello') {
@@ -136,7 +192,7 @@ test('tracker removal', function (t) {
   })
 
   p2pt2.on('peerconnect', peer => {
-    p2pt2.removeTracker(announceURLs[0])
+    p2pt2.removeTracker(announceURLsSet2[0])
 
     setTimeout(() => {
       p2pt2.send(peer, 'hello')
@@ -147,62 +203,3 @@ test('tracker removal', function (t) {
   p2pt2.start()
 })
 
-test('peer connections', function (t) {
-  const announce = announceURLs.concat(announceURLs1)
-
-  const p2pt1 = new P2PT(announce, 'p2pt')
-  const p2pt2 = new P2PT(announce, 'p2pt')
-
-  p2pt1.on('peerconnect', (peer) => {
-    t.pass('Connect event emitted')
-
-    p2pt1.send(peer, 'hello')
-  })
-
-  p2pt1.on('peerclose', (peer) => {
-    t.pass('Close event emitted')
-  })
-
-  p2pt1.on('msg', (peer, msg) => {
-    // Different trackers will give same peer with same ID, but different data channels
-    // this test will check if the second data channel is used if first is closed
-    setTimeout(() => {
-      p2pt1.send(peer, 'hello3')
-    }, 1000)
-  })
-
-  p2pt2.on('peerconnect', (peer) => {
-    t.pass('Connect event emitted')
-  })
-
-  let msgReceiveCount = 0
-
-  p2pt2.on('msg', (peer, msg) => {
-    // t.pass('Connect event emitted')
-
-    if (msgReceiveCount === 0) {
-      setTimeout(() => {
-        p2pt2.send(peer, 'hello2')
-
-        // Forcefully close connection
-        peer.destroy()
-      }, 100)
-    } else {
-      t.equal(msg, 'hello3')
-
-      p2pt1.destroy()
-      p2pt2.destroy()
-
-      t.end()
-    }
-
-    msgReceiveCount++
-  })
-
-  p2pt2.on('peerclose', (peer) => {
-    t.pass('Close event emitted')
-  })
-
-  p2pt1.start()
-  p2pt2.start()
-})

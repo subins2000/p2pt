@@ -4,7 +4,7 @@ const server = new Server({
   udp: false, // enable udp server? [default=true]
   http: true, // enable http server? [default=true]
   ws: true, // enable websocket server? [default=true]
-  stats: false // enable web-based statistics? [default=true]
+  stats: true // enable web-based statistics? [default=true]
 })
 
 server.on('error', function (err) {
