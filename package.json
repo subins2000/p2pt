@@ -7,11 +7,11 @@
   "browser": "src/p2pt.js",
   "types": "src/p2pt.d.ts",
   "scripts": {
-    "build": "npm run build:umd && npm run build:umd-tiny",
-    "test-browser": "vite test",
-    "test-node": "node test/*.js",
-    "test:all": "npm run test-browser && npm run test-node",
-    "test": "start-server-and-test 'node start-trackers.js' 5001 test:all",
+    "start-trackers": "node start-trackers.js",
+    "test-browser": "echo 'Use \"npm run start-trackers, then npm run dev\" and open http://localhost:5173/test/index.html in browser'",
+    "test-node": "node test/node.js",
+    "test-without-tracker-start": "npm run test-node && npm run test-browser",
+    "test": "start-server-and-test 'node start-trackers.js' 5001 test-without-tracker-start",
     "dev": "vite"
   },
   "dependencies": {

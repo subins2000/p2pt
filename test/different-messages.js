@@ -1,5 +1,9 @@
 import test from './utils.js'
-import P2PT from '../src/p2pt.js'
+
+// Import the correct P2PT module based on environment
+const P2PT = typeof window !== 'undefined' 
+  ? (await import('../src/p2pt.js')).default
+  : (await import('../src/node.js')).default
 
 const announceURLs = [
   'ws://localhost:5000'

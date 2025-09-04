@@ -4,7 +4,7 @@ let globalPassCount = 0;
 let globalFailCount = 0;
 let completedTests = 0;
 
-function log(msg) {
+function log(msg, type = 'info') {
   if (typeof document !== 'undefined') {
     // Browser environment
     const logElem = document.getElementById('log');
@@ -12,14 +12,49 @@ function log(msg) {
     if (typeof msg == 'object') {
       logElem.innerHTML += (JSON && JSON.stringify ? JSON.stringify(msg, undefined, 2) : msg) + '<br />';
     } else {
-      logElem.innerHTML += msg + "<br/>";
+      let styledMsg = msg;
+      
+      switch (type) {
+        case 'success':
+          styledMsg = `<span style="color: #28a745;">✓ ${msg}</span>`;
+          break;
+        case 'error':
+          styledMsg = `<span style="color: #dc3545;">✗ ${msg}</span>`;
+          break;
+        case 'info':
+          styledMsg = `<span style="color: #4a90e2;">${msg}</span>`;
+          break;
+        case 'warning':
+          styledMsg = `<span style="color: #ffc107;">⚠ ${msg}</span>`;
+          break;
+        default:
+          styledMsg = msg;
+      }
+      
+      logElem.innerHTML += styledMsg + "<br/>";
     }
   } else {
     // Node.js environment
     if (typeof msg == 'object') {
       console.log(JSON && JSON.stringify ? JSON.stringify(msg, undefined, 2) : msg);
     } else {
-      console.log(msg);
+      // Add emoji/prefix for console output
+      let prefix = '';
+      switch (type) {
+        case 'success':
+          prefix = '✓ ';
+          break;
+        case 'error':
+          prefix = '✗ ';
+          break;
+        case 'warning':
+          prefix = '⚠ ';
+          break;
+        case 'info':
+          prefix = 'ℹ ';
+          break;
+      }
+      console.log(prefix + msg);
     }
   }
 }
@@ -45,38 +80,38 @@ function runNextTest() {
   let passCount = 0;
   let failCount = 0;
 
-  log(`<span style="color: #4a90e2; font-weight: bold; font-size: 1.1em;"># ${name}</span>`)
+  log(`# ${name}`, 'info')
   
   const t = {
     equal: (actual, expected, msg) => {
       if (actual === expected) {
         passCount++;
-        log(`<span style="color: #28a745;">✓ ok</span> - ${msg || `${actual} == ${expected}`}`)
+        log(`ok - ${msg || `${actual} == ${expected}`}`, 'success')
       } else {
         failCount++;
-        log(`<span style="color: #dc3545;">✗ not ok</span> - ${msg || 'assertion failed'} (got ${actual}, expected ${expected})`)
+        log(`not ok - ${msg || 'assertion failed'} (got ${actual}, expected ${expected})`, 'error')
       }
     },
     ok: (value, msg) => {
       if (value) {
         passCount++;
-        log(`<span style="color: #28a745;">✓ ok</span> - ${msg}`)
+        log(`ok - ${msg}`, 'success')
       } else {
         failCount++;
-        log(`<span style="color: #dc3545;">✗ not ok</span> - ${msg}`)
+        log(`not ok - ${msg}`, 'error')
       }
     },
     pass: (msg) => {
       passCount++;
-      log(`<span style="color: #28a745;">✓ ok</span> - ${msg}`)
+      log(`ok - ${msg}`, 'success')
     },
     match: (str, regex, msg) => {
       if (regex.test(str)) {
         passCount++;
-        log(`<span style="color: #28a745;">✓ ok</span> - ${msg || `${str} matches ${regex}`}`)
+        log(`ok - ${msg || `${str} matches ${regex}`}`, 'success')
       } else {
         failCount++;
-        log(`<span style="color: #dc3545;">✗ not ok</span> - ${msg || 'regex match failed'}`)
+        log(`not ok - ${msg || 'regex match failed'}`, 'error')
       }
     },
     end: () => {
@@ -84,7 +119,7 @@ function runNextTest() {
       const status = failCount === 0 ? 'PASS' : 'FAIL';
       const statusColor = failCount === 0 ? '#28a745' : '#dc3545';
       
-      log(`<span style="color: ${statusColor}; font-weight: bold;">${status}</span> - ${passCount}/${total} assertions passed`);
+      log(`${status} - ${passCount}/${total} assertions passed`, failCount === 0 ? 'success' : 'error');
       log("");
       
       globalPassCount += passCount;
@@ -101,15 +136,19 @@ function runNextTest() {
 function showFinalSummary() {
   const totalAssertions = globalPassCount + globalFailCount;
   const overallStatus = globalFailCount === 0 ? 'ALL TESTS PASSED' : 'SOME TESTS FAILED';
-  const statusColor = globalFailCount === 0 ? '#28a745' : '#dc3545';
   
   log(`<div style="border-top: 2px solid #ccc; margin-top: 20px; padding-top: 10px;">`);
-  log(`<span style="color: ${statusColor}; font-weight: bold; font-size: 1.2em;">${overallStatus}</span>`);
-  log(`Tests completed: ${completedTests}`);
-  log(`Total assertions: ${totalAssertions}`);
-  log(`<span style="color: #28a745;">Passed: ${globalPassCount}</span>`);
-  log(`<span style="color: #dc3545;">Failed: ${globalFailCount}</span>`);
+  log(`${overallStatus}`, globalFailCount === 0 ? 'success' : 'error');
+  log(`Tests completed: ${completedTests}`, 'info');
+  log(`Total assertions: ${totalAssertions}`, 'info');
+  log(`Passed: ${globalPassCount}`, 'success');
+  log(`Failed: ${globalFailCount}`, 'error');
   log(`</div>`);
+
+  if (typeof window === 'undefined') {
+    // Node.js environment - exit with appropriate code
+    process.exit(globalFailCount === 0 ? 0 : 1);
+  }
 }
 
 export default test
