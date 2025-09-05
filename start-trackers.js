@@ -4,8 +4,8 @@ const log = data => {
   console.log(`stdout: ${data}`)
 }
 
-const server1 = spawn('node', ['startTracker.js'])
-const server2 = spawn('env', ['PORT=5001', 'node', 'startTracker.js'])
+const server1 = spawn('node', ['start-tracker.js'])
+const server2 = spawn('env', ['PORT=5001', 'node', 'start-tracker.js'])
 
 server1.stdout.on('data', log)
 server1.stderr.on('data', log)

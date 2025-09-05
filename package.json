@@ -1,6 +1,6 @@
 {
   "name": "p2pt",
-  "version": "1.5.1",
+  "version": "1.6.0",
   "description": "P2P connections with WebTorrent trackers",
   "main": "src/node.js",
   "type": "module",
@@ -12,20 +12,20 @@
     "test-node": "node test/node.js",
     "test-without-tracker-start": "npm run test-node && npm run test-browser",
     "test": "start-server-and-test 'node start-trackers.js' 5001 test-without-tracker-start",
-    "dev": "vite"
+    "dev": "vite",
+    "build": "vite build"
   },
   "dependencies": {
-    "bittorrent-tracker": "^10.0.12",
+    "bittorrent-tracker": "^11.2.1",
     "uint8-util": "^2.2.2"
   },
   "optionalDependencies": {
     "@roamhq/wrtc": "^0.9.0"
   },
   "devDependencies": {
-    "standard": "^17.1.0",
     "start-server-and-test": "^2.0.0",
-    "tape": "^5.6.6",
-    "vite": "^7.1.1"
+    "vite": "^7.1.1",
+    "vite-plugin-node-polyfills": "^0.24.0"
   },
   "repository": {
     "type": "git",
@@ -42,10 +42,5 @@
   "bugs": {
     "url": "https://github.com/subins2000/p2pt/issues"
   },
-  "homepage": "https://github.com/subins2000/p2pt#readme",
-  "standard": {
-    "ignore": [
-      "dist"
-    ]
-  }
+  "homepage": "https://github.com/subins2000/p2pt#readme"
 }
