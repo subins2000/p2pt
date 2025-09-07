@@ -1,13 +1,25 @@
 {
   "name": "p2pt",
-  "version": "1.6.0",
-  "description": "P2P connections with WebTorrent trackers",
+  "version": "1.6.1",
+  "description": "WebRTC P2P connections with WebTorrent trackers as signalling server",
   "main": "src/node.js",
   "type": "module",
-  "browser": "src/p2pt.js",
-  "types": "src/p2pt.d.ts",
+  "exports": {
+    ".": {
+      "browser": "./src/p2pt.js",
+      "node": "./src/node.js",
+      "types": "./src/p2pt.d.ts",
+      "import": "./src/p2pt.js",
+      "require": "./src/node.js"
+    },
+    "./dist": {
+      "types": "./dist/p2pt.d.ts",
+      "import": "./dist/p2pt.es.js",
+      "require": "./dist/p2pt.cjs"
+    }
+  },
   "scripts": {
-    "start-trackers": "node start-trackers.js",
+    "trackers": "node start-trackers.js",
     "test-browser": "echo 'Use \"npm run start-trackers, then npm run dev\" and open http://localhost:5173/test/index.html in browser'",
     "test-node": "node test/node.js",
     "test-without-tracker-start": "npm run test-node && npm run test-browser",
@@ -16,7 +28,7 @@
     "build": "vite build"
   },
   "dependencies": {
-    "bittorrent-tracker": "^11.2.1",
+    "bittorrent-tracker": "^11.2.2",
     "uint8-util": "^2.2.2"
   },
   "optionalDependencies": {

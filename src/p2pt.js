@@ -4,7 +4,7 @@
  * Licensed under MIT
  */
 
-import WebSocketTracker from '../node_modules/bittorrent-tracker/lib/client/websocket-tracker.js'
+import WebSocketTracker from 'bittorrent-tracker/websocket-tracker'
 import EventEmitter from 'events'
 import Debug from 'debug'
 import { randomBytes, arr2hex, hex2bin, hex2arr, hash, arr2text } from 'uint8-util'

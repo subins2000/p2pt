@@ -52,3 +52,23 @@ Add yours here ! Send a PR ! 🚀
 ### Simple Example
 
 Open [this webpage](https://codepen.io/subins2000/pen/MWKwRYJ) in two separate browser windows. You'll see the messages. It's a codepen, you can fiddle with the code there.
+
+## Development
+
+```bash
+npm run dev
+```
+
+Tests can be run in node and browser by
+
+```bash
+npm run test
+```
+
+### Release process
+
+```bash
+npm run build
+npm pack # Verify
+npm publish
+```
