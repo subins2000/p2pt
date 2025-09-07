@@ -16,6 +16,11 @@
       "types": "./dist/p2pt.d.ts",
       "import": "./dist/p2pt.es.js",
       "require": "./dist/p2pt.cjs"
+    },
+    "./iife": {
+      "types": "./dist/p2pt.d.ts",
+      "import": "./dist/p2pt.iife.js",
+      "require": "./dist/p2pt.iife.js"
     }
   },
   "scripts": {
