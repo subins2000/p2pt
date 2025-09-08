@@ -1,6 +1,6 @@
 {
   "name": "p2pt",
-  "version": "1.6.1",
+  "version": "1.6.2",
   "description": "WebRTC P2P connections with WebTorrent trackers as signalling server",
   "main": "src/node.js",
   "type": "module",
@@ -25,7 +25,7 @@
   },
   "scripts": {
     "trackers": "node start-trackers.js",
-    "test-browser": "echo 'Use \"npm run start-trackers, then npm run dev\" and open http://localhost:5173/test/index.html in browser'",
+    "test-browser": "echo 'Use \"npm run start-trackers, then npm run dev\" and open http://127.0.0.1:5173/test/index.html in browser'",
     "test-node": "node test/node.js",
     "test-without-tracker-start": "npm run test-node && npm run test-browser",
     "test": "start-server-and-test 'node start-trackers.js' 5001 test-without-tracker-start",

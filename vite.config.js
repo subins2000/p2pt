@@ -13,5 +13,9 @@ export default defineConfig({
       // Externalize deps that shouldn't be bundled
       external: []
     }
+  },
+  server: {
+    // Firefox requires 127.0.0.1 for WebRTC connections to work
+    host: '127.0.0.1'
   }
 })

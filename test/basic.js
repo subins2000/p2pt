@@ -122,36 +122,57 @@ test('peer connections', function (t) {
   const p2pt1 = new P2PT(twoTrackers, 'p2pt')
   const p2pt2 = new P2PT(twoTrackers, 'p2pt')
 
-  let numberOfDataChannels = 0
+  let peerCloseEvents = 0
+
+  const endTest = () => {
+    if (peerCloseEvents === 2) {
+      p2pt1.destroy()
+      p2pt2.destroy()
+      t.end()
+    }
+  }
 
   p2pt1.on('peerclose', (peer) => {
-    t.pass('Close event emitted')
+    t.pass('Close event emitted on p2ptp1')
+    peerCloseEvents++
+
+    endTest()
+  })
+
+  p2pt2.on('peerclose', (peer) => {
+    t.pass('Close event emitted on p2ptp2')
+    peerCloseEvents++
+
+    endTest()
   })
 
   p2pt1.on('msg', (peer, msg) => {
-    p2pt1.send(peer, 'hello3')
-  })
-
-  p2pt2.on('peerconnect', (peer) => {
-    t.pass('Connect event emitted')
-    numberOfDataChannels++
-
-    p2pt1.send(peer, 'hello')
-  })
-
-  p2pt2.on('msg', (peer, msg) => {
-    if (msg === 'hello3') {
-      p2pt1.destroy()
-      p2pt2.destroy()
-
-      t.end()
-    } else if (numberOfDataChannels === 2) {
-      p2pt2.send(peer, 'hello2')
-
-      // Forcefully close connection
+    if (msg === 'hello') {
+      // Received by second channel
+      t.pass('Received by second channel')
       peer.destroy()
     }
   })
+
+  const interval = setInterval(() => {
+    const peerId = Object.keys(p2pt2.peers)[0]
+    const numberOfDataChannels = Object.keys(p2pt2.peers[peerId] ?? {}).length
+
+    if (numberOfDataChannels === 2) {
+      const channel1 = p2pt2.peers[peerId][Object.keys(p2pt2.peers[peerId])[0]]
+      channel1.destroy()
+
+      setTimeout(() => {
+        // This is inside a timeout to ensure that the channel is destroyed before sending.
+        // There's a logic in simple-peer to not destroy channel until all data is sent.
+        // If we call send instantly, it might get queued to be sent via channel 1 itself.
+
+        p2pt2.send(channel1, 'hello') // The other channel will be used to send by p2pt automatically
+      }, 1000)
+
+      clearInterval(interval)
+    }
+  }, 100)
 
   p2pt1.start()
   p2pt2.start()

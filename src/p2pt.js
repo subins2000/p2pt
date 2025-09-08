@@ -132,9 +132,16 @@ export default class P2PT extends EventEmitter {
         debug('Error in connection : ' + err)
       })
 
+      // ferros simple-peer uses close
       peer.on('close', () => {
         this._removePeer(peer)
         debug('Connection closed with ' + peer.id)
+      })
+
+      // @thaunknown/simple-peer uses disconnect
+      peer.on('disconnect', () => {
+        this._removePeer(peer)
+        debug('Connection disconnected with ' + peer.id)
       })
     })
 
